@@ -13,7 +13,7 @@
     </div>
     <div class="container">
       <div class="sidebar">
-          <form action="">
+          <form onsubmit="return false;">
             <h3>Model</h3>
             <button id="line" name="selected-model" value="line">
               <img width="20" height="20" src="./assets/line.png" alt="line" />
@@ -29,7 +29,7 @@
             </button><br />
           </form>
           <br />
-          <form action="">
+          <form onsubmit="return false;">
             <h3>Feature</h3>
             <button id="undo" name="selected-feature" value="undo">
               <img width="20" height="20" src="./assets/undo.png" alt="undo" />
@@ -37,11 +37,11 @@
             <button id="redo" name="selected-feature" value="redo">
               <img width="20" height="20" src="./assets/redo.png" alt="redo" />
             </button><br />
-            <button id="move" name="selected-feature" value="move">
-              <img width="20" height="20" src="./assets/move.png" alt="move" />
+            <button id="save" name="selected-feature" value="save">
+              <img width="20" height="20" src="./assets/save.png" alt="save" />
             </button>
-            <button id="reset" name="selected-feature" value="reset">
-              <img width="20" height="20" src="./assets/reset.png" alt="reset" />
+            <button id="load" name="selected-feature" value="load">
+              <img width="20" height="20" src="./assets/load.png" alt="load" />
             </button><br />
             <p>Transform</p>
             <input type="radio" id="translasi" name="selected-transform" value="translasi" />
@@ -60,10 +60,11 @@
       <div class="canvas">
         <canvas id="canvas"></canvas>
         <input type="range" min="0" max="360" step="10" value="0" oninput=console.log(this.value)>
+        <button id="clear" name="selected-feature" value="clear">
+          clear
+        </button>
       </div>
     </div>
-  <script type="text/javascript" src="./util.js">
-        
-    </script>
+  <script type="text/javascript" src="./main.js"></script>
   </body>
 </html>
