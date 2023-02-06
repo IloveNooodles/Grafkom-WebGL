@@ -1,4 +1,53 @@
-var vertexShaderText = [
+/* ==== Element and event listener ==== */
+const lineButton = document.getElementById("line");
+lineButton.addEventListener("click", function () {
+  draw("line");
+});
+
+const squareButton = document.getElementById("square");
+squareButton.addEventListener("click", function () {
+  console.log("square");
+});
+
+const rectangleButton = document.getElementById("rectangle");
+rectangleButton.addEventListener("click", function () {
+  console.log("rectangle");
+});
+
+const polygonButton = document.getElementById("polygon");
+polygonButton.addEventListener("click", function () {
+  console.log("polygon");
+});
+
+const undoButton = document.getElementById("undo");
+undoButton.addEventListener("click", function () {
+  console.log("undo");
+});
+
+const redoButton = document.getElementById("redo");
+redoButton.addEventListener("click", function () {
+  console.log("redo");
+});
+
+const clearButton = document.getElementById("clear");
+clearButton.addEventListener("click", function () {
+  console.log("clear");
+});
+
+const saveButton = document.getElementById("save");
+saveButton.addEventListener("click", function () {
+  console.log("save");
+});
+
+const loadButton = document.getElementById("load");
+loadButton.addEventListener("click", function () {
+  console.log("load");
+});
+
+const canvas = document.getElementById("canvas");
+
+/* ==== Global Object ==== */
+const vertexShaderText = [
   "precision mediump float;",
   "",
   "attribute vec2 vertPosition;",
@@ -12,7 +61,7 @@ var vertexShaderText = [
   "}",
 ].join("\n");
 
-var fragmentShaderText = [
+const fragmentShaderText = [
   "precision mediump float;",
   "",
   "varying vec3 fragColor;",
@@ -22,9 +71,10 @@ var fragmentShaderText = [
   "}",
 ].join("\n");
 
-var canvas = document.getElementById("canvas");
-var gl = canvas.getContext("webgl");
-export function start() {
+const gl = canvas.getContext("webgl");
+
+/* ==== Function ==== */
+window.onload = function start() {
   console.log("start");
 
   if (!gl) {
@@ -35,51 +85,6 @@ export function start() {
   gl.clear(gl.COLOR_BUFFER_BIT | gl.DEPTH_BUFFER_BIT);
 };
 
-var lineButton = document.getElementById("line");
-lineButton.addEventListener("click", function () {
-  draw("line");
-});
-
-var squareButton = document.getElementById("square");
-squareButton.addEventListener("click", function () {
-  console.log("square");
-});
-
-var rectangleButton = document.getElementById("rectangle");
-rectangleButton.addEventListener("click", function () {
-  console.log("rectangle");
-});
-
-var polygonButton = document.getElementById("polygon");
-polygonButton.addEventListener("click", function () {
-  console.log("polygon");
-});
-
-var undoButton = document.getElementById("undo");
-undoButton.addEventListener("click", function () {
-  console.log("undo");
-});
-
-var redoButton = document.getElementById("redo");
-redoButton.addEventListener("click", function () {
-  console.log("redo");
-});
-
-var clearButton = document.getElementById("clear");
-clearButton.addEventListener("click", function () {
-  console.log("clear");
-});
-
-var saveButton = document.getElementById("save");
-saveButton.addEventListener("click", function () {
-  console.log("save");
-});
-
-var loadButton = document.getElementById("load");
-loadButton.addEventListener("click", function () {
-  console.log("load");
-});
-
 function draw(model) {
   if (!gl) {
     alert("WebGL not supported");
@@ -88,8 +93,8 @@ function draw(model) {
   gl.clearColor(0.75, 0.85, 0.8, 1.0);
   gl.clear(gl.COLOR_BUFFER_BIT | gl.DEPTH_BUFFER_BIT);
 
-  var vertexShader = gl.createShader(gl.VERTEX_SHADER);
-  var fragmentShader = gl.createShader(gl.FRAGMENT_SHADER);
+  const vertexShader = gl.createShader(gl.VERTEX_SHADER);
+  const fragmentShader = gl.createShader(gl.FRAGMENT_SHADER);
 
   gl.shaderSource(vertexShader, vertexShaderText);
   gl.shaderSource(fragmentShader, fragmentShaderText);
@@ -111,7 +116,7 @@ function draw(model) {
     return;
   }
 
-  var program = gl.createProgram();
+  const program = gl.createProgram();
   gl.attachShader(program, vertexShader);
   gl.attachShader(program, fragmentShader);
   gl.linkProgram(program);
@@ -126,12 +131,11 @@ function draw(model) {
   }
   if (model == "line") {
     //line
-  }else if (model == "square") {
+  } else if (model == "square") {
     //square
-  }else if (model == "rectangle") {
+  } else if (model == "rectangle") {
     //rectangle
-  }else if (model == "polygon") {
+  } else if (model == "polygon") {
     //polygon
   }
 }
-
