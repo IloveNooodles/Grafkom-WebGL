@@ -55,8 +55,8 @@ canvas.addEventListener("mousedown", function (e) {
 const vertexShaderText = `
   precision mediump float;  
   attribute vec4 a_position;
-  attribute vec3 vertColor;
-  varying vec3 fragColor;
+  attribute vec4 vertColor;
+  varying vec4 fragColor;
 
   void main() {
     fragColor = vertColor;
@@ -66,10 +66,10 @@ const vertexShaderText = `
 /* to check change frag color to rgb */
 const fragmentShaderText = `
   precision mediump float;
-  varying vec3 fragColor;
+  varying vec4 fragColor;
   void main() {
-    // gl_FragColor = vec4(fragColor, 1);
-    gl_FragColor = vec4(0.2,1,0.3, 1);
+    gl_FragColor = fragColor;
+    // gl_FragColor = vec4(0.2,1,0.3, 1);
   }`;
 
 const gl = canvas.getContext("webgl");
@@ -137,40 +137,61 @@ function createShaderProgram(vertexShaderText, fragmentShaderText) {
   return program;
 }
 
+/* size is component per vertecies */
+function render(gl, program, attribute = "a_position", arr = [], size = 3) {
+  const attributeLocation = gl.getAttribLocation(program, attribute);
+  const buffer = gl.createBuffer();
+
+  /* Change this settings later */
+  const stride = 0;
+  const offset = 0;
+  const type = gl.FLOAT;
+  const normalized = gl.FALSE;
+
+  gl.bindBuffer(gl.ARRAY_BUFFER, buffer);
+  gl.bufferData(gl.ARRAY_BUFFER, new Float32Array(arr), gl.STATIC_DRAW);
+
+  gl.useProgram(program);
+  gl.enableVertexAttribArray(attributeLocation);
+  gl.vertexAttribPointer(
+    attributeLocation,
+    size,
+    type,
+    normalized,
+    stride,
+    offset
+  );
+}
+
+function renderColor(program, arr = [], size = 3) {
+  render(gl, program, "vertColor", arr, size);
+}
+
+function renderVertex(program, arr = [], size = 3) {
+  render(gl, program, "a_position", arr, size);
+}
+
 function draw(model) {
   if (!gl) {
     alert("WebGL not supported");
-  }
-  const program = createShaderProgram(vertexShaderText, fragmentShaderText);
-
-  if (!program) {
     return;
   }
 
-  const positionAttributeLocation = gl.getAttribLocation(program, "a_position");
-  const positionBuffer = gl.createBuffer();
-  gl.bindBuffer(gl.ARRAY_BUFFER, positionBuffer);
+  const program = createShaderProgram(vertexShaderText, fragmentShaderText);
 
-  var positions = [0, 0, 0, 0.5, 0.7, 0, 1, 0.2, 0.3];
-  gl.bufferData(gl.ARRAY_BUFFER, new Float32Array(positions), gl.STATIC_DRAW);
+  if (!program) {
+    alert("Failed creating WebGL Program");
+    return;
+  }
 
-  gl.viewport(0, 0, gl.canvas.width, gl.canvas.height);
+  const positions = [1, 1, 1, -1, -1, 1, -1, -1];
+  const colors = [1, 0, 0, 1, 0, 1, 0, 1, 0, 0, 1, 1];
+
+  renderColor(program, colors, 4);
+  renderVertex(program, positions, 2);
+
   clear();
-
-  gl.useProgram(program);
-  gl.enableVertexAttribArray(positionAttributeLocation);
-
-  gl.bindBuffer(gl.ARRAY_BUFFER, positionBuffer);
-  /* transfer from arraybuffer to array in js */
-  gl.vertexAttribPointer(
-    positionAttributeLocation,
-    2,
-    gl.FLOAT,
-    gl.FALSE,
-    0,
-    0
-  );
-  gl.drawArrays(gl.TRIANGLE_STRIP, 0, 4);
+  gl.drawArrays(gl.TRIANGLE_STRIP, 0, 3);
 
   if (model == "line") {
     //line
