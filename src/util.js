@@ -24,7 +24,6 @@ function transformCoordinate(canvas, x, y) {
   /* Converts from coordinate to zero to one */
   /* converts zero to one to zero to two */
   /* Converts zero to two to -1 to 1 */
-  console.log(x, y);
   const realWidth = (x / width) * 2 - 1;
   const realHeight = (y / height) * 2 - 1;
 
