@@ -45,6 +45,11 @@ loadButton.addEventListener("click", function () {
 });
 
 const canvas = document.getElementById("canvas");
+canvas.addEventListener("mousedown", function (e) {
+  let { x, y } = getMousePosition(canvas, e);
+  let { realWidth, realHeight } = transformCoordinate(canvas, x, y);
+  console.log(realWidth, realHeight);
+});
 
 /* ==== Global Object ==== */
 const vertexShaderText = [
@@ -81,54 +86,124 @@ window.onload = function start() {
     alert("WebGL not supported");
   }
 
+  /* setting viewport */
+  clear();
+};
+
+function main() {
+  const shaderProgram = createShaderProgram(
+    vertexShaderText,
+    fragmentShaderText
+  );
+
+  if (!shaderProgram) {
+    return;
+  }
+
+  const programInfo = {
+    program: shaderProgram,
+    attribLocations: {
+      vertexPosition: gl.getAttribLocation(shaderProgram, "aVertexPosition"),
+    },
+    uniformLocations: {
+      projectionMatrix: gl.getUniformLocation(
+        shaderProgram,
+        "uProjectionMatrix"
+      ),
+      modelViewMatrix: gl.getUniformLocation(shaderProgram, "uModelViewMatrix"),
+    },
+  };
+}
+
+function clear() {
+  /* create a green tosca screen */
   gl.clearColor(0.75, 0.85, 0.8, 1.0);
   gl.clear(gl.COLOR_BUFFER_BIT | gl.DEPTH_BUFFER_BIT);
-};
+}
+
+function loadShader(type, input) {
+  let shader = gl.createShader(type);
+
+  gl.shaderSource(shader, input);
+  gl.compileShader(shader);
+
+  if (!gl.getShaderParameter(shader, gl.COMPILE_STATUS)) {
+    console.error(
+      "ERROR compiling vertex shader!",
+      gl.getShaderInfoLog(vertexShader)
+    );
+    return null;
+  }
+
+  return shader;
+}
+
+function createShaderProgram(vertexShaderText, fragmentShaderText) {
+  const vertexShader = gl.loadShader(gl.VERTEX_SHADER, vertexShaderText);
+  const fragmentShader = gl.loadShader(gl.FRAGMENT_SHADER, fragmentShaderText);
+
+  const program = gl.createProgram();
+  gl.attachShader(program, vertexShader);
+  gl.attachShader(program, fragmentShader);
+  gl.linkProgram(program);
+
+  if (!gl.getProgramParameter(program, gl.LINK_STATUS)) {
+    console.error("ERROR linking program!", gl.getProgramInfoLog(program));
+    gl.deleteProgram(program);
+    return;
+  }
+
+  gl.validateProgram(program);
+  if (!gl.getProgramParameter(program, gl.VALIDATE_STATUS)) {
+    console.error("ERROR validating program!", gl.getProgramInfoLog(program));
+    gl.deleteProgram(program);
+    return;
+  }
+
+  /* dont forget to delete after use it  */
+  // gl.deleteShader(vertexShader);
+  // gl.deleteShader(fragmentShader);
+
+  return program;
+}
 
 function draw(model) {
   if (!gl) {
     alert("WebGL not supported");
   }
 
-  gl.clearColor(0.75, 0.85, 0.8, 1.0);
-  gl.clear(gl.COLOR_BUFFER_BIT | gl.DEPTH_BUFFER_BIT);
+  clear();
 
-  const vertexShader = gl.createShader(gl.VERTEX_SHADER);
-  const fragmentShader = gl.createShader(gl.FRAGMENT_SHADER);
+  const program = createShaderProgram(vertexShaderText, fragmentShaderText);
 
-  gl.shaderSource(vertexShader, vertexShaderText);
-  gl.shaderSource(fragmentShader, fragmentShaderText);
-
-  gl.compileShader(vertexShader);
-  if (!gl.getShaderParameter(vertexShader, gl.COMPILE_STATUS)) {
-    console.error(
-      "ERROR compiling vertex shader!",
-      gl.getShaderInfoLog(vertexShader)
-    );
-    return;
-  }
-  gl.compileShader(fragmentShader);
-  if (!gl.getShaderParameter(fragmentShader, gl.COMPILE_STATUS)) {
-    console.error(
-      "ERROR compiling fragment shader!",
-      gl.getShaderInfoLog(fragmentShader)
-    );
+  if (!program) {
     return;
   }
 
-  const program = gl.createProgram();
-  gl.attachShader(program, vertexShader);
-  gl.attachShader(program, fragmentShader);
-  gl.linkProgram(program);
-  if (!gl.getProgramParameter(program, gl.LINK_STATUS)) {
-    console.error("ERROR linking program!", gl.getProgramInfoLog(program));
-    return;
-  }
-  gl.validateProgram(program);
-  if (!gl.getProgramParameter(program, gl.VALIDATE_STATUS)) {
-    console.error("ERROR validating program!", gl.getProgramInfoLog(program));
-    return;
-  }
+  const positionAttributeLocation = gl.getAttribLocation(program, "a_position");
+  const positionBuffer = gl.createBuffer();
+  gl.bindBuffer(gl.ARRAY_BUFFER, positionBuffer);
+
+  var positions = [0, 0, 0, 0.5, 0.7, 0];
+  gl.bufferData(gl.ARRAY_BUFFER, new Float32Array(positions), gl.STATIC_DRAW);
+
+  gl.viewport(0, 0, gl.canvas.width, gl.canvas.height);
+  clear();
+
+  gl.enableVertexAttribArray(positionAttributeLocation);
+  gl.bindBuffer(gl.ARRAY_BUFFER, positionBuffer);
+  /* transfer from arraybuffer to array in js */
+  gl.vertexAttribPointer(
+    positionAttributeLocation,
+    2,
+    gl.FLOAT,
+    gl.FALSE,
+    0,
+    0
+  );
+  gl.drawArrays(gl.TRIANGLES, 0, 3);
+  gl.useProgram(program);
+
   if (model == "line") {
     //line
   } else if (model == "square") {
@@ -137,5 +212,18 @@ function draw(model) {
     //rectangle
   } else if (model == "polygon") {
     //polygon
+  } else {
+    return;
   }
+}
+
+function initBufferPosition() {
+  const bufferPos = gl.createBuffer();
+
+  gl.bindBuffer(gl.ARRAY_BUFFER, bufferPos);
+  const positions = [1.0, 1.0, -1.0, 1.0, 1.0, -1.0, -1.0, -1.0];
+
+  gl.bufferData(gl.ARRAY_BUFFER, new Float32Array(positions), gl.STATIC_DRAW);
+
+  return bufferPos;
 }
