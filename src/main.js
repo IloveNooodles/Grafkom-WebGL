@@ -184,17 +184,34 @@ function draw(model) {
     return;
   }
 
-  const positions = [1, 1, 1, -1, -1, 1, -1, -1];
-  const colors = [1, 0, 0, 1, 0, 1, 0, 1, 0, 0, 1, 1];
+  // const positions = [1, 1, 1, -1, -1, 1, -1, -1];
+  // const colors = [1, 0, 0, 1, 0, 1, 0, 1, 0, 0, 1, 1];
 
-  renderColor(program, colors, 4);
-  renderVertex(program, positions, 2);
+  // renderColor(program, colors, 4);
+  // renderVertex(program, positions, 2);
 
-  clear();
-  gl.drawArrays(gl.TRIANGLE_STRIP, 0, 3);
-
+  // clear();
+  // gl.drawArrays(gl.TRIANGLE_STRIP, 0, 3);
+  
+  var positions = [];
+  var colors = [];
   if (model == "line") {
-    //line
+    canvas.addEventListener("mousedown", function (e) {
+      let { x, y } = getMousePosition(canvas, e);
+      let { realWidth, realHeight } = transformCoordinate(canvas, x, y);
+      positions.push(realWidth, realHeight);
+      colors.push(0, 0, 0, 1);
+
+      if (positions.length % 4 == 0) {
+        renderColor(program, colors, 4);
+        renderVertex(program, positions, 2);
+
+        clear();
+        for (var i = 0; i < positions.length; i += 2) {
+          gl.drawArrays(gl.LINES, i, 2);
+        }
+      }
+    });
   } else if (model == "square") {
     //square
   } else if (model == "rectangle") {
