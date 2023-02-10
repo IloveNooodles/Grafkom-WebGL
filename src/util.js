@@ -29,3 +29,17 @@ function transformCoordinate(canvas, x, y) {
 
   return { realWidth, realHeight };
 }
+
+function getNearestPoint(x, y, points) {
+  let nearestPoint = null;
+  let minDistance = 0.05;
+  for (let i = 0; i < points.length; i++) {
+    let point = points[i];
+    let distance = Math.sqrt(Math.pow(x - point.x, 2) + Math.pow(y - point.y, 2));
+    if (distance < minDistance) {
+      minDistance = distance;
+      nearestPoint = point;
+    }
+  }
+  return nearestPoint;
+}
