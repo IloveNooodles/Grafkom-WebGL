@@ -44,6 +44,16 @@ loadButton.addEventListener("click", function () {
   console.log("load");
 });
 
+// const changeColorButton = document.getElementById("change-color");
+// changeColorButton.addEventListener("change", function () {
+//   canvas.addEventListener("mousedown", function (e) {
+//     let { x, y } = getMousePosition(canvas, e);
+//     let { realWidth, realHeight } = transformCoordinate(canvas, x, y);
+//     let nearestPoint = getNearestPoint(realWidth, realHeight, points);
+//   }
+//   );
+// });
+
 const canvas = document.getElementById("canvas");
 canvas.addEventListener("mousedown", function (e) {
   let { x, y } = getMousePosition(canvas, e);
@@ -204,8 +214,4 @@ function draw(model) {
   } else {
     return;
   }
-}
-
-function changeColor(color) {
-  console.log(color);
 }

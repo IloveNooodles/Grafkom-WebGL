@@ -68,47 +68,54 @@
               alt="load"
             /></button
           ><br />
-          <p>Transform</p>
-          <input
-            type="radio"
-            id="translasi"
-            name="selected-transform"
-            value="translasi"
-          />
-          <label for="translasi">Translasi</label><br />
-          <input
-            type="radio"
-            id="rotasi"
-            name="selected-transform"
-            value="rotasi"
-          />
-          <label for="rotasi">Rotasi</label><br />
-          <input
-            type="radio"
-            id="dilatasi"
-            name="selected-transform"
-            value="dilatasi"
-          />
-          <label for="dilatasi">Dilatasi</label><br />
-          <input
-            type="radio"
-            id="shear"
-            name="selected-transform"
-            value="shear"
-          />
-          <label for="shear">Shear</label><br />
           <label for="color">Color</label>
           <input type="color" id="color" name="color" value="#000000" />
         </form>
       </div>
       <div class="canvas">
         <canvas id="canvas"></canvas>
-        <input type="range" min="0" max="360" step="10" value="0" />
+        <label for="x-translation">X : </label>
+        <input
+          type="range"
+          min="0"
+          max="800"
+          step="10"
+          value="0"
+          id="x-translation" 
+        />
+        <label for="y-translation">Y : </label>
+        <input 
+          type="range"
+          min="0"
+          max="800"
+          step="10"
+          value="0"
+          id="y-translation"
+        />
+        <label for="rotation">Rotation : </label>
+        <input
+          type="range"
+          min="0"
+          max="360"
+          step="10"
+          value="0"
+          id="rotation"
+        />
+        <label for="scale">Scale : </label>
+        <input
+          type="range"
+          min="0"
+          max="2"
+          step="0.1"
+          value="1"
+          id="scale"
+        />
         <button id="clear" name="selected-feature" value="clear">clear</button>
       </div>
     </div>
     <script src="main.js"></script>
     <script src="util.js"></script>
     <script src="model.js"></script>
+    <script src="feature.js"></script>
   </body>
 </html>
