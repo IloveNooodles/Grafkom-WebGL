@@ -1,23 +1,41 @@
 /* ==== Element and event listener ==== */
+let positions = [];
+let colors = [];
+let vertexCount = 0;
+const startDrawPolygonButton = document.getElementById("mulai-gambar-polygon");
+const stopDrawPolygonButton = document.getElementById("stop-gambar-polygon");
+const deleteVertexButton = document.getElementById("hapus-vertex");
+
 const lineButton = document.getElementById("line");
 lineButton.addEventListener("click", function () {
+  startDrawPolygonButton.hidden = true;
+  stopDrawPolygonButton.hidden = true;
   draw("line");
 });
 
 const squareButton = document.getElementById("square");
 squareButton.addEventListener("click", function () {
+  startDrawPolygonButton.hidden = true;
+  stopDrawPolygonButton.hidden = true;
   console.log("square");
 });
 
 const rectangleButton = document.getElementById("rectangle");
 rectangleButton.addEventListener("click", function () {
+  startDrawPolygonButton.hidden = true;
+  stopDrawPolygonButton.hidden = true;
   console.log("rectangle");
 });
 
 const polygonButton = document.getElementById("polygon");
 polygonButton.addEventListener("click", function () {
-  console.log("polygon");
+  startDrawPolygonButton.hidden = false;
+  stopDrawPolygonButton.hidden = false;
 });
+
+startDrawPolygonButton.addEventListener("click", function() {
+  draw("polygon");
+})
 
 const undoButton = document.getElementById("undo");
 undoButton.addEventListener("click", function () {
@@ -200,7 +218,7 @@ function draw(model) {
   } else if (model == "rectangle") {
     //rectangle
   } else if (model == "polygon") {
-    //polygon
+    polygon(canvas, gl, program);
   } else {
     return;
   }
@@ -209,3 +227,47 @@ function draw(model) {
 function changeColor(color) {
   console.log(color);
 }
+
+// canvas.addEventListener("mousedown", function(e){
+//   let { x, y } = getMousePosition(canvas, e);
+//   let { realWidth, realHeight } = transformCoordinate(canvas, x, y);
+  
+//   for (var i = 0; i < positions.length; i += 2){
+//     if (
+//         (realWidth <= positions[i] + 0.1) && (realWidth >= positions[i] - 0.1) &&
+//         (realHeight <= positions[i + 1] + 0.1) && (realHeight >= positions[i + 1] - 0.1)
+//         ) {
+//       deleteVertexButton.hidden = false;
+//       deleteVertexButton.addEventListener("click", function (i) {
+//         colors.splice(i, 4);
+//         positions.splice(i, 2);
+//         vertexCount--;
+          
+//         // console.log("1");
+//         // console.log(positions);
+//         deleteVertexButton.hidden = true;
+
+//         //Render ulang
+//         const program = createShaderProgram(vertexShaderText, fragmentShaderText);
+
+//         console.log(positions);
+//         console.log(vertexCount);
+
+//         renderColor(program, colors, 4);
+//         renderVertex(program, positions, 2);
+//         clear();
+//         for (var j = 0; j < positions.length; j += 2) {
+//           // console.log("1");
+//           gl.drawArrays(gl.TRIANGLE_FAN, j, vertexCount);
+//         }
+
+//         console.log(positions);
+//         console.log(vertexCount);
+//       });
+//     }
+//     else {
+//       deleteVertexButton.hidden = true;
+//     }
+//   }
+//   // console.log("1");
+// });
