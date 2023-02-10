@@ -90,7 +90,7 @@ const fragmentShaderText = `
 
 const gl = canvas.getContext("webgl");
 let drawType = "line";
-let size = 2; /* size default for dilatation */
+let size = parseInt(scaleSlider.value); /* size default for dilatation */
 
 /* ==== Function ==== */
 window.onload = function start() {
@@ -243,6 +243,8 @@ function draw(model, x, y, size = 5) {
   } else {
     return;
   }
+
+  renderObject(program);
 }
 
 function resetState() {
