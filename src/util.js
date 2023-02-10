@@ -44,10 +44,13 @@ function transformCoordinate(canvas, x, y) {
   return [realWidth, realHeight];
 }
 
+/* TODO: Change this using 2d array */
+/* Get nearest point */
 function getNearestPoint(x, y, points) {
   let index = -1;
   let minDistance = 100;
   for (let i = 0; i < points.length - 2; i += 2) {
+    // euclidDistance()
     let distance = Math.sqrt(
       Math.pow(x - points[i], 2) + Math.pow(y - points[i + 1], 2)
     );
@@ -58,4 +61,30 @@ function getNearestPoint(x, y, points) {
     }
   }
   return index;
+}
+
+function euclidDistance(pointA, pointB) {
+  return Math.sqrt(
+    Math.pow(pointA[0] - pointB[0], 2) + Math.pow(pointA[1] - pointB[1], 2)
+  );
+}
+
+/* flatten 2d array to 1d */
+function flatten(matrix) {
+  let len = matrix.length;
+
+  if (Array.isArray(matrix[0])) {
+    len *= matrix[0].length;
+  }
+
+  let result = new Float32Array(len);
+  let cur = 0;
+
+  for (let i = 0; i < len; i++) {
+    for (let j = 0; j < matrix[i].length; i++) {
+      result[cur++] = matrix[i][j];
+    }
+  }
+
+  return result;
 }

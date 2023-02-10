@@ -61,11 +61,19 @@ scaleSlider.addEventListener("input", function (e) {
 // });
 
 const canvas = document.getElementById("canvas");
+canvas.addEventListener("mousemove", function (e) {
+  if (isDown) {
+    console.log("AAA");
+  }
+});
 canvas.addEventListener("mousedown", function (e) {
   let { x, y } = getMousePosition(canvas, e);
+  isDown = true;
   draw(drawType, x, y, size);
 });
-// canvas.addEventListener("mouseup", function (e) {});
+canvas.addEventListener("mouseup", function (e) {
+  isDown = false;
+});
 
 /* ==== Global Object ==== */
 const vertexShaderText = `
@@ -89,8 +97,17 @@ const fragmentShaderText = `
   }`;
 
 const gl = canvas.getContext("webgl");
+const program = createShaderProgram(vertexShaderText, fragmentShaderText);
+
 let drawType = "line";
 let size = parseInt(scaleSlider.value); /* size default for dilatation */
+let isDown = false;
+let models = {
+  line: [],
+  square: [],
+  rectangle: [],
+  polygon: [],
+};
 
 /* ==== Function ==== */
 window.onload = function start() {
@@ -101,19 +118,6 @@ window.onload = function start() {
   }
 
   clear();
-};
-
-window.requestAnimFrame = function requestAnimation() {
-  return (
-    window.requestAnimationFrame ||
-    window.webkitRequestAnimationFrame ||
-    window.mozRequestAnimationFrame ||
-    window.oRequestAnimationFrame ||
-    window.msRequestAnimationFrame ||
-    function (callback, element) {
-      window.setTimeout(callback, 1000 / 60);
-    }
-  );
 };
 
 function clear() {
@@ -214,8 +218,6 @@ function draw(model, x, y, size = 5) {
     return;
   }
 
-  const program = createShaderProgram(vertexShaderText, fragmentShaderText);
-
   if (!program) {
     alert("Failed creating WebGL Program");
     return;
@@ -243,8 +245,6 @@ function draw(model, x, y, size = 5) {
   } else {
     return;
   }
-
-  renderObject(program);
 }
 
 function resetState() {
@@ -257,3 +257,18 @@ function resetState() {
   polygonState.positions = [];
   polygonState.colors = [];
 }
+
+window.requestAnimFrame = (function () {
+  return (
+    window.requestAnimationFrame ||
+    window.webkitRequestAnimationFrame ||
+    window.mozRequestAnimationFrame ||
+    window.oRequestAnimationFrame ||
+    window.msRequestAnimationFrame ||
+    function (callback) {
+      window.setTimeout(callback, 1000 / 60);
+    }
+  );
+})();
+
+renderObject(program);

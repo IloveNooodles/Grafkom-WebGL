@@ -1,3 +1,21 @@
+class Shape {
+  constructor(name, type, positions, colors) {
+    this.name = name;
+    this.type = type;
+    this.positions = positions;
+    this.colors = colors;
+  }
+}
+
+/* TODO: Define inheritance of the models */
+class Line {}
+
+class Square {}
+
+class Rectangle {}
+
+class Polygon {}
+
 const lineState = {
   positions: [],
   colors: [],
@@ -23,19 +41,18 @@ function line(canvas, gl, program, x, y) {
   lineState.positions.push(x, y);
   lineState.colors.push(0, 0, 0, 1);
 
-  // translation(lineState.positions, canvas, gl, program);
-  // dilatation(lineState.positions, gl, program);
-  // changeColor(lineState.colors, lineState.positions, canvas, gl, program);
+  translation(lineState.positions, canvas, gl, program);
+  dilatation(lineState.positions, gl, program);
+  changeColor(lineState.colors, lineState.positions, canvas, gl, program);
 }
 
-function renderObject(program) {
+function renderObject() {
   clear();
 
   /* line */
   renderColor(program, lineState.colors, 4);
   renderVertex(program, lineState.positions, 2);
   if (lineState.positions.length % 4 == 0) {
-    console.log("test");
     for (let i = 0; i < lineState.positions.length; i += 2) {
       gl.drawArrays(gl.LINES, i, 2);
     }
@@ -49,6 +66,11 @@ function renderObject(program) {
   for (let i = 0; i < arrSize; i += 4) {
     gl.drawArrays(gl.TRIANGLE_STRIP, i, 4);
   }
+  // window.requestAnimFrame(renderObject);
+  // window.requestAnimationFrame(renderObject);
+  window.requestAnimFrame(function (program) {
+    renderObject(program);
+  });
 }
 
 function square(canvas, gl, program, x, y) {
@@ -67,16 +89,6 @@ function square(canvas, gl, program, x, y) {
 
   squareState.colors = [...squareState.colors, ...tempColor];
   squareState.positions = [...squareState.positions, ...tempPosition];
-
-  // let arrSize = squareState.positions.length;
-
-  // console.log(squareState);
-  // renderColor(program, squareState.colors, 4);
-  // renderVertex(program, squareState.positions, 2);
-  // clear();
-  // for (let i = 0; i < arrSize; i += 4) {
-  //   gl.drawArrays(gl.TRIANGLE_STRIP, i, 4);
-  // }
 }
 
 function rectangle(canvas, gl, program, x, y, size) {}
