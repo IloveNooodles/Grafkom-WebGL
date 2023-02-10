@@ -34,4 +34,5 @@ function line(canvas, gl, program, x, y) {
 
   translation(lineState.positions, canvas, gl, program);
   dilatation(lineState.positions, gl, program);
+  changeColor(colors, positions, canvas, gl, program);
 }
