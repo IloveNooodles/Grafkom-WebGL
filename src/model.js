@@ -37,9 +37,10 @@ const rectangleState = {
 };
 
 function line(canvas, gl, program, x, y) {
-  //get mouse position
-  lineState.positions.push(x, y);
-  lineState.colors.push(0, 0, 0, 1);
+  for (i = 0; i < 2; i++) {
+    lineState.positions.push(transformCoordinate(canvas, x, y));
+    lineState.colors.push(0, 0, 0, 1);
+  }
 
   translation(lineState.positions, canvas, gl, program);
   dilatation(lineState.positions, gl, program);
@@ -51,11 +52,10 @@ function renderObject() {
 
   /* line */
   renderColor(program, lineState.colors, 4);
-  renderVertex(program, lineState.positions, 2);
-  if (lineState.positions.length % 4 == 0) {
-    for (let i = 0; i < lineState.positions.length; i += 2) {
-      gl.drawArrays(gl.LINES, i, 2);
-    }
+  renderVertex(program, flatten(lineState.positions), 2);
+
+  for (let i = 0; i < lineState.positions.length; i += 2) {
+    gl.drawArrays(gl.LINES, i, 2);
   }
 
   /* square */

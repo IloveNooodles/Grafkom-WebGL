@@ -63,7 +63,9 @@ scaleSlider.addEventListener("input", function (e) {
 const canvas = document.getElementById("canvas");
 canvas.addEventListener("mousemove", function (e) {
   if (isDown) {
-    console.log("AAA");
+    let { x, y } = getMousePosition(canvas, e);
+    /* TODO: Defined for each object how to move */
+    onMove(drawType, x, y);
   }
 });
 canvas.addEventListener("mousedown", function (e) {
@@ -124,6 +126,15 @@ function clear() {
   /* create a green tosca screen */
   gl.clearColor(0.75, 0.85, 0.8, 1.0);
   gl.clear(gl.COLOR_BUFFER_BIT | gl.DEPTH_BUFFER_BIT);
+}
+
+function onMove(type, x, y) {
+  if (type === "line") {
+    let [realWidth, realHeight] = transformCoordinate(canvas, x, y);
+    let len = lineState.positions.length;
+    lineState.positions[len - 1][0] = realWidth;
+    lineState.positions[len - 1][1] = realHeight;
+  }
 }
 
 function loadShader(type, input) {
@@ -232,15 +243,13 @@ function draw(model, x, y, size = 5) {
   // clear();
   // gl.drawArrays(gl.TRIANGLE_FAN, 0, 5);
 
-  if (model == "line") {
-    let [realWidth, realHeight] = transformCoordinate(canvas, x, y);
-    line(canvas, gl, program, realWidth, realHeight);
-  } else if (model == "square") {
-    //square
+  if (model === "line") {
+    line(canvas, gl, program, x, y);
+  } else if (model === "square") {
     square(canvas, gl, program, x, y);
-  } else if (model == "rectangle") {
+  } else if (model === "rectangle") {
     //rectangle
-  } else if (model == "polygon") {
+  } else if (model === "polygon") {
     //polygon
   } else {
     return;

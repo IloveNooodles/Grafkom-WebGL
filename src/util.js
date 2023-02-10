@@ -72,17 +72,26 @@ function euclidDistance(pointA, pointB) {
 /* flatten 2d array to 1d */
 function flatten(matrix) {
   let len = matrix.length;
+  let n = len;
+  let isArr = false;
 
   if (Array.isArray(matrix[0])) {
-    len *= matrix[0].length;
+    isArr = true;
+    n *= matrix[0].length;
   }
 
-  let result = new Float32Array(len);
+  let result = new Float32Array(n);
   let cur = 0;
 
-  for (let i = 0; i < len; i++) {
-    for (let j = 0; j < matrix[i].length; i++) {
-      result[cur++] = matrix[i][j];
+  if (isArr) {
+    for (let i = 0; i < len; i++) {
+      for (let j = 0; j < matrix[i].length; j++) {
+        result[cur++] = matrix[i][j];
+      }
+    }
+  } else {
+    for (let i = 0; i < len; i++) {
+      result[cur++] = matrix[i];
     }
   }
 
