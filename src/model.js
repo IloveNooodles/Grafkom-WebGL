@@ -1,7 +1,7 @@
 function line(canvas, gl, program){
   let positions = [];
   let colors = [];
-  
+
   //get mouse position
   canvas.addEventListener("mousedown", function (e) {
     let { x, y } = getMousePosition(canvas, e);
@@ -20,6 +20,7 @@ function line(canvas, gl, program){
   });
 
   translation(positions, canvas, gl, program);
+  dilatation(positions, gl, program);
 
   clearButton.addEventListener("click", function () {
     clear();

@@ -16,7 +16,7 @@ function translation(positions, canvas, gl, program){
       }
     }
     tempX = xTranslation;
-    
+
     renderVertex(program, newPositions, 2);
     clear();
     for (var i = 0; i < newPositions.length; i += 2) {
@@ -41,6 +41,25 @@ function translation(positions, canvas, gl, program){
       }
     }
     tempY = yTranslation;
+
+    renderVertex(program, newPositions, 2);
+    clear();
+    for (var i = 0; i < newPositions.length; i += 2) {
+      gl.drawArrays(gl.LINES, i, 2);
+    }
+  });
+}
+
+function dilatation(positions, gl, program){
+  const scaleSlider = document.getElementById("dilatation");
+  var newPositions = positions;
+  var temp = 1;
+  scaleSlider.addEventListener("input", function () {
+    var scale = scaleSlider.value;
+    for (var i = 0; i < newPositions.length; i += 1) {
+      newPositions[i] = positions[i]*scale/temp;
+    }
+    temp = scale;
 
     renderVertex(program, newPositions, 2);
     clear();
