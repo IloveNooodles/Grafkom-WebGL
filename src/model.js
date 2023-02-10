@@ -61,13 +61,21 @@ function renderObject() {
   /* square */
   let arrSize = squareState.positions.length;
 
-  renderColor(program, squareState.colors, 4);
-  renderVertex(program, squareState.positions, 2);
+  renderColor(program, flatten(squareState.colors), 4);
+  renderVertex(program, flatten(squareState.positions), 2);
   for (let i = 0; i < arrSize; i += 4) {
     gl.drawArrays(gl.TRIANGLE_STRIP, i, 4);
   }
-  // window.requestAnimFrame(renderObject);
-  // window.requestAnimationFrame(renderObject);
+
+  /* rectangle */
+  let recSize = rectangleState.positions.length;
+
+  renderColor(program, flatten(rectangleState.colors), 4);
+  renderVertex(program, flatten(rectangleState.positions), 2);
+  for (let i = 0; i < recSize; i += 4) {
+    gl.drawArrays(gl.TRIANGLE_STRIP, i, 4);
+  }
+
   window.requestAnimFrame(function (program) {
     renderObject(program);
   });
@@ -77,20 +85,25 @@ function square(canvas, gl, program, x, y) {
   /* add vertices by clockwise manner */
   let tempPosition = [];
   let tempColor = [];
-  tempPosition.push(...transformCoordinate(canvas, x, y));
-  tempPosition.push(...transformCoordinate(canvas, x + size, y));
-  tempPosition.push(...transformCoordinate(canvas, x, y + size));
-  tempPosition.push(...transformCoordinate(canvas, x + size, y + size));
+  tempPosition.push(transformCoordinate(canvas, x, y));
+  tempPosition.push(transformCoordinate(canvas, x + size, y));
+  tempPosition.push(transformCoordinate(canvas, x, y + size));
+  tempPosition.push(transformCoordinate(canvas, x + size, y + size));
 
   /* colors */
   for (let i = 0; i < 4; i++) {
-    tempColor.push(0, 0, 0, 1);
+    tempColor.push([0, 0, 0, 1]);
   }
 
-  squareState.colors = [...squareState.colors, ...tempColor];
-  squareState.positions = [...squareState.positions, ...tempPosition];
+  squareState.colors.push(...tempColor);
+  squareState.positions.push(...tempPosition);
 }
 
-function rectangle(canvas, gl, program, x, y, size) {}
+function rectangle(canvas, gl, program, x, y) {
+  for (let i = 0; i < 4; i++) {
+    rectangleState.positions.push(transformCoordinate(canvas, x, y));
+    rectangleState.colors.push([0, 0, 0, 1]);
+  }
+}
 
 function polygon() {}

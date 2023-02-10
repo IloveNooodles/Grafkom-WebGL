@@ -75,6 +75,7 @@ canvas.addEventListener("mousedown", function (e) {
 });
 canvas.addEventListener("mouseup", function (e) {
   isDown = false;
+  console.log(rectangleState.positions);
 });
 
 /* ==== Global Object ==== */
@@ -129,11 +130,18 @@ function clear() {
 }
 
 function onMove(type, x, y) {
+  let [realWidth, realHeight] = transformCoordinate(canvas, x, y);
   if (type === "line") {
-    let [realWidth, realHeight] = transformCoordinate(canvas, x, y);
     let len = lineState.positions.length;
     lineState.positions[len - 1][0] = realWidth;
     lineState.positions[len - 1][1] = realHeight;
+  } else if (type === "rectangle") {
+    let len = rectangleState.positions.length;
+    /* Change every points besides the starter points */
+    rectangleState.positions[len - 1][0] = realWidth;
+    rectangleState.positions[len - 1][1] = realHeight;
+    rectangleState.positions[len - 2][1] = realHeight;
+    rectangleState.positions[len - 3][0] = realWidth;
   }
 }
 
@@ -248,7 +256,7 @@ function draw(model, x, y, size = 5) {
   } else if (model === "square") {
     square(canvas, gl, program, x, y);
   } else if (model === "rectangle") {
-    //rectangle
+    rectangle(canvas, gl, program, x, y);
   } else if (model === "polygon") {
     //polygon
   } else {
