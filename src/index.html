@@ -73,7 +73,7 @@
         </form>
       </div>
       <div class="canvas">
-        <canvas id="canvas"></canvas>
+        <canvas id="canvas" width="800px" height="800px"></canvas>
         <label for="x-translation">X : </label>
         <input
           type="range"
@@ -81,10 +81,10 @@
           max="800"
           step="10"
           value="0"
-          id="x-translation" 
+          id="x-translation"
         />
         <label for="y-translation">Y : </label>
-        <input 
+        <input
           type="range"
           min="0"
           max="800"
@@ -113,9 +113,9 @@
         <button id="clear" name="selected-feature" value="clear">clear</button>
       </div>
     </div>
-    <script src="main.js"></script>
     <script src="util.js"></script>
     <script src="model.js"></script>
     <script src="feature.js"></script>
+    <script src="main.js"></script>
   </body>
 </html>

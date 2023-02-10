@@ -1,22 +1,22 @@
 /* ==== Element and event listener ==== */
 const lineButton = document.getElementById("line");
 lineButton.addEventListener("click", function () {
-  draw("line");
+  drawType = "line";
 });
 
 const squareButton = document.getElementById("square");
 squareButton.addEventListener("click", function () {
-  console.log("square");
+  drawType = "square";
 });
 
 const rectangleButton = document.getElementById("rectangle");
 rectangleButton.addEventListener("click", function () {
-  console.log("rectangle");
+  drawType = "rectangle";
 });
 
 const polygonButton = document.getElementById("polygon");
 polygonButton.addEventListener("click", function () {
-  console.log("polygon");
+  drawType = "polygon";
 });
 
 const undoButton = document.getElementById("undo");
@@ -31,7 +31,8 @@ redoButton.addEventListener("click", function () {
 
 const clearButton = document.getElementById("clear");
 clearButton.addEventListener("click", function () {
-  console.log("clear");
+  clear();
+  resetState();
 });
 
 const saveButton = document.getElementById("save");
@@ -58,8 +59,9 @@ const canvas = document.getElementById("canvas");
 canvas.addEventListener("mousedown", function (e) {
   let { x, y } = getMousePosition(canvas, e);
   let { realWidth, realHeight } = transformCoordinate(canvas, x, y);
-  draw();
+  draw(drawType, realWidth, realHeight);
 });
+// canvas.addEventListener("mouseup", function (e) {});
 
 /* ==== Global Object ==== */
 const vertexShaderText = `
@@ -83,6 +85,7 @@ const fragmentShaderText = `
   }`;
 
 const gl = canvas.getContext("webgl");
+let drawType = "line";
 
 /* ==== Function ==== */
 window.onload = function start() {
@@ -93,6 +96,19 @@ window.onload = function start() {
   }
 
   clear();
+};
+
+window.requestAnimFrame = function requestAnimation() {
+  return (
+    window.requestAnimationFrame ||
+    window.webkitRequestAnimationFrame ||
+    window.mozRequestAnimationFrame ||
+    window.oRequestAnimationFrame ||
+    window.msRequestAnimationFrame ||
+    function (callback, element) {
+      window.setTimeout(callback, 1000 / 60);
+    }
+  );
 };
 
 function clear() {
@@ -148,15 +164,21 @@ function createShaderProgram(vertexShaderText, fragmentShaderText) {
 }
 
 /* size is component per vertecies */
-function render(gl, program, attribute = "a_position", arr = [], size = 3) {
+function render(
+  gl,
+  program,
+  attribute = "a_position",
+  arr = [],
+  size = 3,
+  type = gl.FLOAT,
+  isNormalized = gl.FALSE
+) {
   const attributeLocation = gl.getAttribLocation(program, attribute);
   const buffer = gl.createBuffer();
 
   /* Change this settings later */
   const stride = 0;
   const offset = 0;
-  const type = gl.FLOAT;
-  const normalized = gl.FALSE;
 
   gl.bindBuffer(gl.ARRAY_BUFFER, buffer);
   gl.bufferData(gl.ARRAY_BUFFER, new Float32Array(arr), gl.STATIC_DRAW);
@@ -167,7 +189,7 @@ function render(gl, program, attribute = "a_position", arr = [], size = 3) {
     attributeLocation,
     size,
     type,
-    normalized,
+    isNormalized,
     stride,
     offset
   );
@@ -181,7 +203,7 @@ function renderVertex(program, arr = [], size = 3) {
   render(gl, program, "a_position", arr, size);
 }
 
-function draw(model) {
+function draw(model, x, y) {
   if (!gl) {
     alert("WebGL not supported");
     return;
@@ -194,17 +216,17 @@ function draw(model) {
     return;
   }
 
-  // const positions = [1, 1, 1, -1, -1, 1, -1, -1];
+  // const positions = [0.7, 0.7, 0.3, 0.7, 0.7, 0.3, 0.3, 0.3, 0.1, 0.1];
   // const colors = [1, 0, 0, 1, 0, 1, 0, 1, 0, 0, 1, 1];
 
-  // renderColor(program, colors, 4);
   // renderVertex(program, positions, 2);
+  // renderColor(program, colors, 4);
 
   // clear();
-  // gl.drawArrays(gl.TRIANGLE_STRIP, 0, 3);
+  // gl.drawArrays(gl.TRIANGLE_FAN, 0, 5);
 
   if (model == "line") {
-    line(canvas, gl, program);
+    line(canvas, gl, program, x, y);
   } else if (model == "square") {
     //square
   } else if (model == "rectangle") {
@@ -214,4 +236,15 @@ function draw(model) {
   } else {
     return;
   }
+}
+
+function resetState() {
+  lineState.positions = [];
+  lineState.colors = [];
+  squareState.positions = [];
+  squareState.colors = [];
+  rectangleState.positions = [];
+  rectangleState.colors = [];
+  polygonState.positions = [];
+  polygonState.colors = [];
 }
