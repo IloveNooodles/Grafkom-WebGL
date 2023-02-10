@@ -69,9 +69,7 @@
             /></button
           ><br />
           <label for="color">Color</label>
-          <input type="color" id="color" name="color" value="#000000" /><br />
-          <input type="checkbox" id="fill" name="fill" value="all" onchange="handleAllPoints(this.value)" checked />
-          <label for="fill">Apply to All</label>
+          <input type="color" id="color" name="color" value="#000000" />
         </form>
       </div>
       <div class="canvas">
@@ -112,6 +110,8 @@
           value="1"
           id="dilatation"
         />
+        <label for="Size">Size : </label>
+        <input type="range" min="5" max="360" step="5" value="5" id="size" />
         <button id="clear" name="selected-feature" value="clear">clear</button>
       </div>
     </div>

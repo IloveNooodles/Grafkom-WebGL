@@ -10,13 +10,13 @@ function getRGB(color) {
   const red = parseInt(color.substr(1, 2), 16);
   const green = parseInt(color.substr(3, 2), 16);
   const blue = parseInt(color.substr(5, 2), 16);
-  
+
   //convert rgb to 0 to 1
   const r = red / 255;
   const g = green / 255;
   const b = blue / 255;
 
-  return { r,g,b };
+  return { r, g, b };
 }
 
 function resizeCanvas(canvas) {
@@ -41,15 +41,17 @@ function transformCoordinate(canvas, x, y) {
   const realWidth = (x / width) * 2 - 1;
   const realHeight = (y / height) * -2 + 1;
 
-  return { realWidth, realHeight };
+  return [realWidth, realHeight];
 }
 
 function getNearestPoint(x, y, points) {
   let index = -1;
   let minDistance = 100;
-  for (let i = 0; i < points.length-2; i+=2) {
-    let distance = Math.sqrt(Math.pow(x - points[i], 2) + Math.pow(y - points[i+1], 2));
-    console.log("distance", distance)
+  for (let i = 0; i < points.length - 2; i += 2) {
+    let distance = Math.sqrt(
+      Math.pow(x - points[i], 2) + Math.pow(y - points[i + 1], 2)
+    );
+    console.log("distance", distance);
     if (distance < minDistance) {
       minDistance = distance;
       index = i;

@@ -45,6 +45,11 @@ loadButton.addEventListener("click", function () {
   console.log("load");
 });
 
+const scaleSlider = document.getElementById("size");
+scaleSlider.addEventListener("input", function (e) {
+  size = parseInt(scaleSlider.value);
+});
+
 // const changeColorButton = document.getElementById("change-color");
 // changeColorButton.addEventListener("change", function () {
 //   canvas.addEventListener("mousedown", function (e) {
@@ -58,8 +63,7 @@ loadButton.addEventListener("click", function () {
 const canvas = document.getElementById("canvas");
 canvas.addEventListener("mousedown", function (e) {
   let { x, y } = getMousePosition(canvas, e);
-  let { realWidth, realHeight } = transformCoordinate(canvas, x, y);
-  draw(drawType, realWidth, realHeight);
+  draw(drawType, x, y, size);
 });
 // canvas.addEventListener("mouseup", function (e) {});
 
@@ -86,6 +90,7 @@ const fragmentShaderText = `
 
 const gl = canvas.getContext("webgl");
 let drawType = "line";
+let size = 2; /* size default for dilatation */
 
 /* ==== Function ==== */
 window.onload = function start() {
@@ -203,7 +208,7 @@ function renderVertex(program, arr = [], size = 3) {
   render(gl, program, "a_position", arr, size);
 }
 
-function draw(model, x, y) {
+function draw(model, x, y, size = 5) {
   if (!gl) {
     alert("WebGL not supported");
     return;
@@ -226,9 +231,11 @@ function draw(model, x, y) {
   // gl.drawArrays(gl.TRIANGLE_FAN, 0, 5);
 
   if (model == "line") {
-    line(canvas, gl, program, x, y);
+    let [realWidth, realHeight] = transformCoordinate(canvas, x, y);
+    line(canvas, gl, program, realWidth, realHeight);
   } else if (model == "square") {
     //square
+    square(canvas, gl, program, x, y);
   } else if (model == "rectangle") {
     //rectangle
   } else if (model == "polygon") {
