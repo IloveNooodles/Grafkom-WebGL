@@ -69,7 +69,9 @@
             /></button
           ><br />
           <label for="color">Color</label>
-          <input type="color" id="color" name="color" value="#000000" />
+          <input type="color" id="color" name="color" value="#000000" /><br />
+          <input type="checkbox" id="fill" name="fill" value="all" onchange="handleAllPoints(this.value)" checked />
+          <label for="fill">Apply to All</label>
         </form>
       </div>
       <div class="canvas">

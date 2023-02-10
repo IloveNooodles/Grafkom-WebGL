@@ -18,10 +18,10 @@ function line(canvas, gl, program){
       }
     }
   });
-
+  
   translation(positions, canvas, gl, program);
   dilatation(positions, gl, program);
-
+  changeColor(colors, positions, canvas, gl, program);
   clearButton.addEventListener("click", function () {
     clear();
     positions = [];

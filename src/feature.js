@@ -1,3 +1,5 @@
+var isChecked = true;
+
 function translation(positions, canvas, gl, program){
   //horizontal translation
   const xSlider = document.getElementById("x-translation");
@@ -67,4 +69,44 @@ function dilatation(positions, gl, program){
       gl.drawArrays(gl.LINES, i, 2);
     }
   });
+}
+
+function changeColor( colors, points, canvas, gl, program){
+  var colorInput = document.getElementById("color");
+  var newColors = colors;
+  colorInput.addEventListener("input", function () {
+    var color = colorInput.value;
+    color = getRGB(color);
+    if (isChecked){
+      for (var i = 0; i < newColors.length; i += 4) {
+        newColors[i] = color.r;
+        newColors[i+1] = color.g;
+        newColors[i+2] = color.b;
+      }
+    } else {
+      // canvas.addEventListener("mousedown", function (e) {
+      //   console.log("click")
+      //   let { x, y } = getMousePosition(canvas, e);
+      //   let { realWidth, realHeight } = transformCoordinate(canvas, x, y);
+      //   var index = getNearestPoint(realWidth, realHeight, points);
+      //   newColors[index] = color.r;
+      //   newColors[index+1] = color.g;
+      //   newColors[index+2] = color.b;
+      // });
+    }
+
+    renderColor(program, newColors, 4);
+    clear();
+    for (var i = 0; i < points.length; i += 2) {
+      gl.drawArrays(gl.LINES, i, 2);
+    }
+  });
+}
+
+function handleAllPoints(value){
+  if (value == "all"){
+    isChecked = true;
+  } else {
+    isChecked = false;
+  }
 }
