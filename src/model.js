@@ -42,9 +42,16 @@ function line(canvas, gl, program, x, y) {
     lineState.colors.push(0, 0, 0, 1);
   }
 
-  translation(lineState.positions, canvas, gl, program);
-  dilatation(lineState.positions, gl, program);
-  changeColor(lineState.colors, lineState.positions, canvas, gl, program);
+  translation("line", lineState.positions, canvas, gl, program);
+  dilatation("line", lineState.positions, gl, program);
+  changeColor(
+    "line",
+    lineState.colors,
+    lineState.positions,
+    canvas,
+    gl,
+    program
+  );
 }
 
 function renderObject() {
@@ -53,7 +60,6 @@ function renderObject() {
   /* line */
   renderColor(program, lineState.colors, 4);
   renderVertex(program, flatten(lineState.positions), 2);
-
   for (let i = 0; i < lineState.positions.length; i += 2) {
     gl.drawArrays(gl.LINES, i, 2);
   }
@@ -97,6 +103,9 @@ function square(canvas, gl, program, x, y) {
 
   squareState.colors.push(...tempColor);
   squareState.positions.push(...tempPosition);
+ 
+  translation("square", squareState.positions, canvas, gl, program);
+  dilatation("square", squareState.positions, gl, program);
 }
 
 function rectangle(canvas, gl, program, x, y) {
@@ -104,6 +113,9 @@ function rectangle(canvas, gl, program, x, y) {
     rectangleState.positions.push(transformCoordinate(canvas, x, y));
     rectangleState.colors.push([0, 0, 0, 1]);
   }
+
+  translation("rectangle", rectangleState.positions, canvas, gl, program);
+  dilatation("rectangle", rectangleState.positions, gl, program);
 }
 
 function polygon() {}

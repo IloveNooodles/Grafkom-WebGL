@@ -1,72 +1,74 @@
 var isChecked = true;
 
-function translation(positions, canvas, gl, program) {
+function translation(type, positions, canvas, gl, program) {
   //horizontal translation
   const xSlider = document.getElementById("x-translation");
   let tempX = 0;
+  let newPositions = positions;
+
   xSlider.addEventListener("input", function () {
     let x = transformCoordinate(canvas, parseInt(xSlider.value), 0);
-    let xTranslation = x.realWidth + 1;
-    let newPositions = positions;
-    if (tempX < xTranslation) {
-      for (let i = 0; i < newPositions.length; i += 2) {
-        newPositions[i] += xTranslation - tempX;
-      }
-    } else {
-      for (let i = 0; i < newPositions.length; i += 2) {
-        newPositions[i] -= tempX - xTranslation;
-      }
+    let xTranslation = x[0] + 1;
+    newPositions = positions;
+    for (let i = 0; i < newPositions.length; i++) {
+      newPositions[i][0] += xTranslation - tempX;
     }
     tempX = xTranslation;
-
-    renderVertex(program, newPositions, 2);
-    clear();
-    for (let i = 0; i < newPositions.length; i += 2) {
-      gl.drawArrays(gl.LINES, i, 2);
-    }
   });
 
   //vertical translation
   const ySlider = document.getElementById("y-translation");
   let tempY = 0;
+
   ySlider.addEventListener("input", function () {
     let y = transformCoordinate(canvas, 0, parseInt(ySlider.value));
-    let yTranslation = y.realHeight - 1;
-    let newPositions = positions;
-    if (tempY > yTranslation) {
-      for (let i = 0; i < newPositions.length; i += 2) {
-        newPositions[i + 1] += yTranslation - tempY;
-      }
-    } else {
-      for (let i = 0; i < newPositions.length; i += 2) {
-        newPositions[i + 1] -= tempY - yTranslation;
-      }
+    let yTranslation = y[1] - 1;
+    newPositions = positions;
+    
+    for (let i = 0; i < newPositions.length; i++) {
+      newPositions[i][1] += yTranslation - tempY;
     }
     tempY = yTranslation;
+  });
 
+  clear();
+  if (type == "line") {
     renderVertex(program, newPositions, 2);
-    clear();
-    for (let i = 0; i < newPositions.length; i += 2) {
+    for (let i = 0; i < newPositions.length; i++) {
       gl.drawArrays(gl.LINES, i, 2);
     }
-  });
+  } else if (type == "square" || type == "rectangle") {
+    renderVertex(program, newPositions, 2);
+    for (let i = 0; i < newPositions.length; i++) {
+      gl.drawArrays(gl.TRIANGLE_FAN, i, 4);
+    } 
+  }
 }
 
-function dilatation(positions, gl, program) {
+function dilatation(type, positions, gl, program) {
   const scaleSlider = document.getElementById("dilatation");
   let newPositions = positions;
   let temp = 1;
+
   scaleSlider.addEventListener("input", function () {
-    let scale = parseInt(scaleSlider.value);
+    let scale = scaleSlider.value;
     for (let i = 0; i < newPositions.length; i += 1) {
-      newPositions[i] = (positions[i] * scale) / temp;
+      newPositions[i][0] *= scale / temp;
+      newPositions[i][1] *= scale / temp;
     }
     temp = scale;
 
-    renderVertex(program, newPositions, 2);
     clear();
-    for (let i = 0; i < newPositions.length; i += 2) {
-      gl.drawArrays(gl.LINES, i, 2);
+    if (type == "line") {
+      renderVertex(program, newPositions, 2);
+      for (let i = 0; i < newPositions.length; i++) {
+        gl.drawArrays(gl.LINES, i, 2);
+      }
+    } else if (type == "square" || type == "rectangle") {
+      renderVertex(program, newPositions, 2);
+      for (let i = 0; i < newPositions.length; i++) {
+        gl.drawArrays(gl.TRIANGLE_FAN, i, 4);
+      }
     }
   });
 }
@@ -97,7 +99,7 @@ function changeColor(colors, points, canvas, gl, program) {
 
     renderColor(program, newColors, 4);
     clear();
-    for (let i = 0; i < points.length; i += 2) {
+    for (let i = 0; i < points.length; i ++) {
       gl.drawArrays(gl.LINES, i, 2);
     }
   });
