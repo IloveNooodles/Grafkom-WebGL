@@ -133,26 +133,13 @@ function clear() {
 function onMove(type, x, y) {
   let [realWidth, realHeight] = transformCoordinate(canvas, x, y);
   if (type === "line") {
-    /* get latest object */
+    /* get latest object and call on render move */
     let lenObject = models["line"].length;
-    console.log(lenObject);
-    let lastObject = models["line"][lenObject - 1];
-    let len = lastObject.positions.length;
-
-    /* Edit the last object */
-    lastObject.positions[len - 1][0] = realWidth;
-    lastObject.positions[len - 1][1] = realHeight;
+    models["line"][lenObject - 1].onRenderMove(realWidth, realHeight);
   } else if (type === "rectangle") {
-    /* get latest object */
+    /* get latest object and call on render move*/
     let lenObject = models["rectangle"].length;
-    let lastObject = models["rectangle"][lenObject - 1];
-    let len = lastObject.positions.length;
-
-    /* Edit the last object */
-    lastObject.positions[len - 1][0] = realWidth;
-    lastObject.positions[len - 1][1] = realHeight;
-    lastObject.positions[len - 2][1] = realHeight;
-    lastObject.positions[len - 3][0] = realWidth;
+    models["rectangle"][lenObject - 1].onRenderMove(realWidth, realHeight);
   }
 }
 
@@ -242,7 +229,7 @@ function renderVertex(program, arr = [], size = 3) {
   render(gl, program, "a_position", arr, size);
 }
 
-function draw(model, x, y, size = 5) {
+function draw(model, x, y) {
   if (!gl) {
     alert("WebGL not supported");
     return;
@@ -255,7 +242,7 @@ function draw(model, x, y, size = 5) {
 
   // const positions = [0.7, 0.7, 0.3, 0.7, 0.7, 0.3, 0.3, 0.3, 0.1, 0.1];
   // const colors = [1, 0, 0, 1, 0, 1, 0, 1, 0, 0, 1, 1];
-
+  size;
   // renderVertex(program, positions, 2);
   // renderColor(program, colors, 4);
 
@@ -280,6 +267,23 @@ function resetState() {
   models.polygon = [];
   models.rectangle = [];
   models.square = [];
+}
+
+function renderObject() {
+  clear();
+
+  // console.log(Object.keys(models));
+  let keys = Object.keys(models);
+  for (let key of keys) {
+    for (let model of models[key]) {
+      model.render(program);
+    }
+  }
+
+  /* render per frame (1s / 60 frame) */
+  window.requestAnimFrame(function (program) {
+    renderObject(program);
+  });
 }
 
 window.requestAnimFrame = (function () {

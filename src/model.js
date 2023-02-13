@@ -1,6 +1,5 @@
 class Shape {
-  constructor(program) {
-    this.program = program;
+  constructor() {
     this.positions = [];
     this.colors = [];
     this.selected = false;
@@ -17,9 +16,19 @@ class Shape {
   rotate(deg) {
     throw new Error("Must be implemented");
   }
+
+  move() {
+    throw new Error("Must be implemented");
+  }
+
+  onRenderMove(x, y) {
+    throw new Error("Must be implemented");
+  }
+
   toggleSelect() {
     this.selected = !this.selected;
   }
+
   render() {
     throw new Error("Must be implemented");
   }
@@ -27,25 +36,32 @@ class Shape {
 
 /* TODO: Define inheritance of the models */
 class Line extends Shape {
-  constructor(x, y, program) {
-    super(program);
+  constructor(x, y) {
+    super();
     for (let i = 0; i < 2; i++) {
       this.positions.push(transformCoordinate(canvas, x, y));
       this.colors.push([0, 0, 0, 1]);
     }
   }
-  render() {
-    renderColor(this.program, flatten(this.colors), 4);
-    renderVertex(this.program, flatten(this.positions), 2);
+
+  render(program) {
+    renderColor(program, flatten(this.colors), 4);
+    renderVertex(program, flatten(this.positions), 2);
     for (let i = 0; i < this.positions.length; i += 2) {
       gl.drawArrays(gl.LINES, i, 2);
     }
   }
+
+  onRenderMove(x, y) {
+    let len = this.positions.length;
+    this.positions[len - 1][0] = x;
+    this.positions[len - 1][1] = y;
+  }
 }
 
 class Square extends Shape {
-  constructor(x, y, program) {
-    super(program);
+  constructor(x, y) {
+    super();
     let tempPosition = [];
     let tempColor = [];
     tempPosition.push(transformCoordinate(canvas, x, y));
@@ -61,11 +77,12 @@ class Square extends Shape {
     this.colors.push(...tempColor);
     this.positions.push(...tempPosition);
   }
-  render() {
+
+  render(program) {
     let arrSize = this.positions.length;
 
-    renderColor(this.program, flatten(this.colors), 4);
-    renderVertex(this.program, flatten(this.positions), 2);
+    renderColor(program, flatten(this.colors), 4);
+    renderVertex(program, flatten(this.positions), 2);
     for (let i = 0; i < arrSize; i += 4) {
       gl.drawArrays(gl.TRIANGLE_STRIP, i, 4);
     }
@@ -73,45 +90,33 @@ class Square extends Shape {
 }
 
 class Rectangle extends Shape {
-  constructor(x, y, program) {
-    super(program);
+  constructor(x, y) {
+    super();
     for (let i = 0; i < 4; i++) {
       this.positions.push(transformCoordinate(canvas, x, y));
       this.colors.push([0, 0, 0, 1]);
     }
   }
-  render() {
+  render(program) {
     let recSize = this.positions.length;
 
-    renderColor(this.program, flatten(this.colors), 4);
-    renderVertex(this.program, flatten(this.positions), 2);
+    renderColor(program, flatten(this.colors), 4);
+    renderVertex(program, flatten(this.positions), 2);
     for (let i = 0; i < recSize; i += 4) {
       gl.drawArrays(gl.TRIANGLE_STRIP, i, 4);
     }
   }
+
+  onRenderMove(x, y) {
+    let len = this.positions.length;
+    this.positions[len - 1][0] = x;
+    this.positions[len - 1][1] = y;
+    this.positions[len - 2][1] = y;
+    this.positions[len - 3][0] = x;
+  }
 }
 
 class Polygon extends Shape {}
-
-const lineState = {
-  positions: [],
-  colors: [],
-};
-
-const squareState = {
-  positions: [],
-  colors: [],
-};
-
-const polygonState = {
-  positions: [],
-  colors: [],
-};
-
-const rectangleState = {
-  positions: [],
-  colors: [],
-};
 
 function line(canvas, gl, program, x, y) {
   for (i = 0; i < 2; i++) {
@@ -129,47 +134,6 @@ function line(canvas, gl, program, x, y) {
   //   gl,
   //   program
   // );
-}
-
-function renderObject() {
-  clear();
-
-  // console.log(Object.keys(models));
-  let keys = Object.keys(models);
-  for (let key of keys) {
-    for (let model of models[key]) {
-      model.render();
-    }
-  }
-  /* line */
-  // renderColor(program, lineState.colors, 4);
-  // renderVertex(program, flatten(lineState.positions), 2);
-  // for (let i = 0; i < lineState.positions.length; i += 2) {
-  //   gl.drawArrays(gl.LINES, i, 2);
-  // }
-
-  /* square */
-  // let arrSize = squareState.positions.length;
-
-  // renderColor(program, flatten(squareState.colors), 4);
-  // renderVertex(program, flatten(squareState.positions), 2);
-  // for (let i = 0; i < arrSize; i += 4) {
-  //   gl.drawArrays(gl.TRIANGLE_STRIP, i, 4);
-  // }
-
-  /* rectangle */
-  let recSize = rectangleState.positions.length;
-
-  renderColor(program, flatten(rectangleState.colors), 4);
-  renderVertex(program, flatten(rectangleState.positions), 2);
-  for (let i = 0; i < recSize; i += 4) {
-    gl.drawArrays(gl.TRIANGLE_STRIP, i, 4);
-  }
-
-  /* render per frame (1s / 60 frame) */
-  window.requestAnimFrame(function (program) {
-    renderObject(program);
-  });
 }
 
 function square(canvas, gl, program, x, y) {
