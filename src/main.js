@@ -135,6 +135,7 @@ function onMove(type, x, y) {
   if (type === "line") {
     /* get latest object */
     let lenObject = models["line"].length;
+    console.log(lenObject);
     let lastObject = models["line"][lenObject - 1];
     let len = lastObject.positions.length;
 
@@ -262,12 +263,11 @@ function draw(model, x, y, size = 5) {
   // gl.drawArrays(gl.TRIANGLE_FAN, 0, 5);
 
   if (model === "line") {
-    models.line.push(new Line(x, y, program, canvas));
-    // line(canvas, gl, program, x, y);
+    models.line.push(new Line(x, y, program));
   } else if (model === "square") {
-    square(canvas, gl, program, x, y);
+    models.square.push(new Square(x, y, program));
   } else if (model === "rectangle") {
-    rectangle(canvas, gl, program, x, y);
+    models.rectangle.push(new Rectangle(x, y, program));
   } else if (model === "polygon") {
     //polygon
   } else {

@@ -74,12 +74,21 @@ class Square extends Shape {
 
 class Rectangle extends Shape {
   constructor(x, y, program) {
+    super(program);
     for (let i = 0; i < 4; i++) {
-      rectangleState.positions.push(transformCoordinate(canvas, x, y));
-      rectangleState.colors.push([0, 0, 0, 1]);
+      this.positions.push(transformCoordinate(canvas, x, y));
+      this.colors.push([0, 0, 0, 1]);
     }
   }
-  render() {}
+  render() {
+    let recSize = this.positions.length;
+
+    renderColor(this.program, flatten(this.colors), 4);
+    renderVertex(this.program, flatten(this.positions), 2);
+    for (let i = 0; i < recSize; i += 4) {
+      gl.drawArrays(gl.TRIANGLE_STRIP, i, 4);
+    }
+  }
 }
 
 class Polygon extends Shape {}
@@ -140,13 +149,13 @@ function renderObject() {
   // }
 
   /* square */
-  let arrSize = squareState.positions.length;
+  // let arrSize = squareState.positions.length;
 
-  renderColor(program, flatten(squareState.colors), 4);
-  renderVertex(program, flatten(squareState.positions), 2);
-  for (let i = 0; i < arrSize; i += 4) {
-    gl.drawArrays(gl.TRIANGLE_STRIP, i, 4);
-  }
+  // renderColor(program, flatten(squareState.colors), 4);
+  // renderVertex(program, flatten(squareState.positions), 2);
+  // for (let i = 0; i < arrSize; i += 4) {
+  //   gl.drawArrays(gl.TRIANGLE_STRIP, i, 4);
+  // }
 
   /* rectangle */
   let recSize = rectangleState.positions.length;
