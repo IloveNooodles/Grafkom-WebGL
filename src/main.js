@@ -68,14 +68,15 @@ canvas.addEventListener("mousemove", function (e) {
     onMove(drawType, x, y);
   }
 });
+
 canvas.addEventListener("mousedown", function (e) {
   let { x, y } = getMousePosition(canvas, e);
   isDown = true;
   draw(drawType, x, y, size);
 });
+
 canvas.addEventListener("mouseup", function (e) {
   isDown = false;
-  console.log(rectangleState.positions);
 });
 
 /* ==== Global Object ==== */
@@ -105,7 +106,7 @@ const program = createShaderProgram(vertexShaderText, fragmentShaderText);
 let drawType = "line";
 let size = parseInt(scaleSlider.value); /* size default for dilatation */
 let isDown = false;
-let models = {
+const models = {
   line: [],
   square: [],
   rectangle: [],
@@ -132,16 +133,25 @@ function clear() {
 function onMove(type, x, y) {
   let [realWidth, realHeight] = transformCoordinate(canvas, x, y);
   if (type === "line") {
-    let len = lineState.positions.length;
-    lineState.positions[len - 1][0] = realWidth;
-    lineState.positions[len - 1][1] = realHeight;
+    /* get latest object */
+    let lenObject = models["line"].length;
+    let lastObject = models["line"][lenObject - 1];
+    let len = lastObject.positions.length;
+
+    /* Edit the last object */
+    lastObject.positions[len - 1][0] = realWidth;
+    lastObject.positions[len - 1][1] = realHeight;
   } else if (type === "rectangle") {
-    let len = rectangleState.positions.length;
-    /* Change every points besides the starter points */
-    rectangleState.positions[len - 1][0] = realWidth;
-    rectangleState.positions[len - 1][1] = realHeight;
-    rectangleState.positions[len - 2][1] = realHeight;
-    rectangleState.positions[len - 3][0] = realWidth;
+    /* get latest object */
+    let lenObject = models["rectangle"].length;
+    let lastObject = models["rectangle"][lenObject - 1];
+    let len = lastObject.positions.length;
+
+    /* Edit the last object */
+    lastObject.positions[len - 1][0] = realWidth;
+    lastObject.positions[len - 1][1] = realHeight;
+    lastObject.positions[len - 2][1] = realHeight;
+    lastObject.positions[len - 3][0] = realWidth;
   }
 }
 
@@ -252,7 +262,8 @@ function draw(model, x, y, size = 5) {
   // gl.drawArrays(gl.TRIANGLE_FAN, 0, 5);
 
   if (model === "line") {
-    line(canvas, gl, program, x, y);
+    models.line.push(new Line(x, y, program, canvas));
+    // line(canvas, gl, program, x, y);
   } else if (model === "square") {
     square(canvas, gl, program, x, y);
   } else if (model === "rectangle") {
@@ -265,14 +276,10 @@ function draw(model, x, y, size = 5) {
 }
 
 function resetState() {
-  lineState.positions = [];
-  lineState.colors = [];
-  squareState.positions = [];
-  squareState.colors = [];
-  rectangleState.positions = [];
-  rectangleState.colors = [];
-  polygonState.positions = [];
-  polygonState.colors = [];
+  models.line = [];
+  models.polygon = [];
+  models.rectangle = [];
+  models.square = [];
 }
 
 window.requestAnimFrame = (function () {

@@ -1,20 +1,88 @@
 class Shape {
-  constructor(name, type, positions, colors) {
-    this.name = name;
-    this.type = type;
-    this.positions = positions;
-    this.colors = colors;
+  constructor(program) {
+    this.program = program;
+    this.positions = [];
+    this.colors = [];
+    this.selected = false;
+    this.scale = [0, 0];
+    this.rotation = 0;
+    this.translation = [0, 0];
+  }
+  scale(x, y) {
+    throw new Error("Must be implemented");
+  }
+  translate(x, y) {
+    throw new Error("Must be implemented");
+  }
+  rotate(deg) {
+    throw new Error("Must be implemented");
+  }
+  toggleSelect() {
+    this.selected = !this.selected;
+  }
+  render() {
+    throw new Error("Must be implemented");
   }
 }
 
 /* TODO: Define inheritance of the models */
-class Line {}
+class Line extends Shape {
+  constructor(x, y, program) {
+    super(program);
+    for (let i = 0; i < 2; i++) {
+      this.positions.push(transformCoordinate(canvas, x, y));
+      this.colors.push([0, 0, 0, 1]);
+    }
+  }
+  render() {
+    renderColor(this.program, flatten(this.colors), 4);
+    renderVertex(this.program, flatten(this.positions), 2);
+    for (let i = 0; i < this.positions.length; i += 2) {
+      gl.drawArrays(gl.LINES, i, 2);
+    }
+  }
+}
 
-class Square {}
+class Square extends Shape {
+  constructor(x, y, program) {
+    super(program);
+    let tempPosition = [];
+    let tempColor = [];
+    tempPosition.push(transformCoordinate(canvas, x, y));
+    tempPosition.push(transformCoordinate(canvas, x + size, y));
+    tempPosition.push(transformCoordinate(canvas, x, y + size));
+    tempPosition.push(transformCoordinate(canvas, x + size, y + size));
 
-class Rectangle {}
+    /* colors */
+    for (let i = 0; i < 4; i++) {
+      tempColor.push([0, 0, 0, 1]);
+    }
 
-class Polygon {}
+    this.colors.push(...tempColor);
+    this.positions.push(...tempPosition);
+  }
+  render() {
+    let arrSize = this.positions.length;
+
+    renderColor(this.program, flatten(this.colors), 4);
+    renderVertex(this.program, flatten(this.positions), 2);
+    for (let i = 0; i < arrSize; i += 4) {
+      gl.drawArrays(gl.TRIANGLE_STRIP, i, 4);
+    }
+  }
+}
+
+class Rectangle extends Shape {
+  constructor(x, y, program) {
+    for (let i = 0; i < 4; i++) {
+      rectangleState.positions.push(transformCoordinate(canvas, x, y));
+      rectangleState.colors.push([0, 0, 0, 1]);
+    }
+  }
+  render() {}
+}
+
+class Polygon extends Shape {}
 
 const lineState = {
   positions: [],
@@ -44,25 +112,32 @@ function line(canvas, gl, program, x, y) {
 
   translation("line", lineState.positions, canvas, gl, program);
   dilatation("line", lineState.positions, gl, program);
-  changeColor(
-    "line",
-    lineState.colors,
-    lineState.positions,
-    canvas,
-    gl,
-    program
-  );
+  // changeColor(
+  //   "line",
+  //   lineState.colors,
+  //   lineState.positions,
+  //   canvas,
+  //   gl,
+  //   program
+  // );
 }
 
 function renderObject() {
   clear();
 
-  /* line */
-  renderColor(program, lineState.colors, 4);
-  renderVertex(program, flatten(lineState.positions), 2);
-  for (let i = 0; i < lineState.positions.length; i += 2) {
-    gl.drawArrays(gl.LINES, i, 2);
+  // console.log(Object.keys(models));
+  let keys = Object.keys(models);
+  for (let key of keys) {
+    for (let model of models[key]) {
+      model.render();
+    }
   }
+  /* line */
+  // renderColor(program, lineState.colors, 4);
+  // renderVertex(program, flatten(lineState.positions), 2);
+  // for (let i = 0; i < lineState.positions.length; i += 2) {
+  //   gl.drawArrays(gl.LINES, i, 2);
+  // }
 
   /* square */
   let arrSize = squareState.positions.length;
@@ -82,6 +157,7 @@ function renderObject() {
     gl.drawArrays(gl.TRIANGLE_STRIP, i, 4);
   }
 
+  /* render per frame (1s / 60 frame) */
   window.requestAnimFrame(function (program) {
     renderObject(program);
   });
@@ -103,7 +179,7 @@ function square(canvas, gl, program, x, y) {
 
   squareState.colors.push(...tempColor);
   squareState.positions.push(...tempPosition);
- 
+
   translation("square", squareState.positions, canvas, gl, program);
   dilatation("square", squareState.positions, gl, program);
 }
