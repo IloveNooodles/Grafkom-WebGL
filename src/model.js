@@ -7,12 +7,24 @@ class Shape {
     this.rotation = 0;
     this.translation = [0, 0];
   }
+
+  copy(obj) {
+    this.positions = obj.positions;
+    this.colors = obj.colors;
+    this.selected = obj.selected;
+    this.scale = obj.scale;
+    this.rotation = obj.rotation;
+    this.translation = obj.translation;
+  }
+
   scale(x, y) {
     throw new Error("Must be implemented");
   }
+
   translate(x, y) {
     throw new Error("Must be implemented");
   }
+
   rotate(deg) {
     throw new Error("Must be implemented");
   }
@@ -23,6 +35,10 @@ class Shape {
 
   onRenderMove(x, y) {
     throw new Error("Must be implemented");
+  }
+
+  isClick() {
+    return this;
   }
 
   toggleSelect() {

@@ -37,12 +37,17 @@ clearButton.addEventListener("click", function () {
 
 const saveButton = document.getElementById("save");
 saveButton.addEventListener("click", function () {
-  console.log("save");
+  let file = save();
+  let link = document.createElement("a");
+  link.setAttribute("download", "save.json");
+  link.href = file;
+  document.body.appendChild(link);
+  link.click();
 });
 
-const loadButton = document.getElementById("load");
-loadButton.addEventListener("click", function () {
-  console.log("load");
+const loadInput = document.getElementById("load");
+loadInput.addEventListener("input", function (e) {
+  load(e.target.files[0]);
 });
 
 const scaleSlider = document.getElementById("size");
@@ -106,7 +111,8 @@ const program = createShaderProgram(vertexShaderText, fragmentShaderText);
 let drawType = "line";
 let size = parseInt(scaleSlider.value); /* size default for dilatation */
 let isDown = false;
-const models = {
+let savedFile = null;
+let models = {
   line: [],
   square: [],
   rectangle: [],
@@ -242,7 +248,6 @@ function draw(model, x, y) {
 
   // const positions = [0.7, 0.7, 0.3, 0.7, 0.7, 0.3, 0.3, 0.3, 0.1, 0.1];
   // const colors = [1, 0, 0, 1, 0, 1, 0, 1, 0, 0, 1, 1];
-  size;
   // renderVertex(program, positions, 2);
   // renderColor(program, colors, 4);
 
@@ -258,8 +263,58 @@ function draw(model, x, y) {
   } else if (model === "polygon") {
     //polygon
   } else {
+    // dapet objectnya
+    // edit mode
+    // scale, ngubarh warna dll
     return;
   }
+}
+
+function save() {
+  let jsonFile = JSON.stringify(models);
+  let data = new Blob([jsonFile], { type: "application/json" });
+
+  /* if already exists remove */
+  if (savedFile !== null) {
+    window.URL.revokeObjectURL(savedFile);
+  }
+
+  savedFile = window.URL.createObjectURL(data);
+  return savedFile;
+}
+
+function loadModel(loadedModel) {
+  resetState();
+  let keys = Object.keys(loadedModel);
+  for (let key of keys) {
+    for (let item of loadedModel[key]) {
+      if (key === "line") {
+        let obj = new Line(0, 0);
+        obj.copy(item);
+        models[key].push(obj);
+      } else if (key === "square") {
+        let obj = new Square(0, 0);
+        obj.copy(item);
+        models[key].push(obj);
+      } else if (key === "rectangle") {
+        let obj = new Square(0, 0);
+        obj.copy(item);
+        models[key].push(obj);
+      } else if (key === "polygon") {
+        let obj = new Polygon();
+        obj.copy(item);
+        models[key].push(obj);
+      }
+    }
+  }
+}
+
+function load(file) {
+  let reader = new FileReader();
+  reader.readAsText(file);
+  reader.addEventListener("load", function (e) {
+    loadModel(JSON.parse(reader.result));
+  });
 }
 
 function resetState() {
