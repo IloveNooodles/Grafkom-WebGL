@@ -104,6 +104,7 @@ canvas.addEventListener("mousedown", function (e) {
   let { x, y } = getMousePosition(canvas, e);
   isDown = true;
   draw(drawType, x, y, size);
+  selectObject(x, y);
 });
 
 canvas.addEventListener("mouseup", function (e) {
@@ -134,7 +135,7 @@ const fragmentShaderText = `
 const gl = canvas.getContext("webgl");
 const program = createShaderProgram(vertexShaderText, fragmentShaderText);
 
-let drawType = "line";
+let drawType = null;
 let size = parseInt(scaleSlider.value); /* size default for dilatation */
 let isDown = false;
 let savedFile = null;

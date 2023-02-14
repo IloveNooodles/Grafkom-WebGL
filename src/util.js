@@ -82,6 +82,46 @@ function euclidDistance(pointA, pointB) {
   );
 }
 
+function centroid(matrix) {
+  let x = 0;
+  let y = 0;
+  let vertexCount = matrix[0].length;
+  for (i = 0; i < vertexCount; i++) {
+    x += matrix[i][0];
+    y += matrix[i][1];
+  }
+
+  x = x / vertexCount;
+  y = y / vertexCount;
+
+  return [x,y];
+}
+
+function selectObject(x, y) {
+  let keys = Object.keys(models);
+  let mousePos = transformCoordinate(canvas, x, y)
+  let minDistance = 0.2;
+  // console.log("1");
+  for (let key of keys) {
+    if (models[key].length !== 0) {
+      console.log(models[key]);
+      for (let model of models[key]) {
+        // console.log("jumlah iterasi");
+        let shapeCentroid = centroid(model.positions);
+        if (euclidDistance(mousePos, shapeCentroid) <= minDistance) {
+          model.selected = true;
+          // console.log("1");
+          console.log(model.selected)
+        } else {
+          model.selected = false;
+          console.log(model.selected)
+        }
+      }
+    }
+  }
+  return;
+}
+
 /* flatten 2d array to 1d */
 function flatten(matrix) {
   let len = matrix.length;

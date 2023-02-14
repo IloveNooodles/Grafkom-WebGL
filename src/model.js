@@ -115,7 +115,7 @@ class Rectangle extends Shape {
   }
   render(program) {
     let recSize = this.positions.length;
-    console.log(this.positions);
+    // console.log(this.positions);
     renderColor(program, flatten(this.colors), 4);
     renderVertex(program, flatten(this.positions), 2);
     for (let i = 0; i < recSize; i += 4) {
@@ -135,9 +135,9 @@ class Rectangle extends Shape {
 class Polygon extends Shape {
   constructor(polyPoints) {
     super();
-    console.log(polyPoints);
+    // console.log(polyPoints);
     let vertexCount = polyPoints.length / 2;
-    console.log(vertexCount);
+    // console.log(vertexCount);
     for (let i = 0; i < polyPoints.length; i += 2) {
       this.positions.push(transformCoordinate(canvas, polyPoints[i], polyPoints[i + 1]));
       this.colors.push([0, 0, 0, 1]);
@@ -145,11 +145,14 @@ class Polygon extends Shape {
   }
 
   render(program) {
-    console.log(this.positions);
+    // console.log(this.positions);
+    // let polyCentroid = centroid(this.positions);
+    // console.log(polyCentroid[0]);
+    // console.log(polyCentroid[1]);
     let vertexCount = this.positions.length;
     renderColor(program, flatten(this.colors), 4);
     renderVertex(program, flatten(this.positions), 2);
-    console.log(vertexCount);
+    // console.log(vertexCount);
     gl.drawArrays(gl.TRIANGLE_FAN, 0, vertexCount);
     // for (let i = 0; i < vertexCount - 2; i += 1) {
     //   console.log("berapa kali");
