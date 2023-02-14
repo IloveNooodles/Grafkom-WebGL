@@ -22,28 +22,25 @@ rectangleButton.addEventListener("click", function () {
   drawType = "rectangle";
 });
 
-
 const polygonButton = document.getElementById("polygon");
 polygonButton.addEventListener("click", function () {
+  isPolygon = true;
   showDrawPolyButtons();
 });
 
-
 const startDrawPolygonButton = document.getElementById("mulai-gambar-polygon");
 startDrawPolygonButton.addEventListener("click", function () {
-  isPolygon = true;
   drawType = "polygon";
 });
 
-const stopDrawPolygonButton = document.getElementById("stop-gambar-polygon")
-stopDrawPolygonButton.addEventListener("click", function() {
+const stopDrawPolygonButton = document.getElementById("stop-gambar-polygon");
+stopDrawPolygonButton.addEventListener("click", function () {
   isPolygon = false;
   drawType = "";
   console.log(polyPoints);
   models.polygon.push(new Polygon(polyPoints, program));
   polyPoints = [];
-})
-;
+});
 
 const undoButton = document.getElementById("undo");
 undoButton.addEventListener("click", function () {
@@ -120,6 +117,7 @@ const vertexShaderText = `
 
   void main() {
     fragColor = vertColor;
+    gl_PointSize = 10.0;
     gl_Position = a_position;
   }`;
 
@@ -281,14 +279,14 @@ function draw(model, x, y) {
   // clear();
   // gl.drawArrays(gl.TRIANGLE_FAN, 0, 5);
 
-  if (model === "line") {
+  if (model === "line" && !isPolygon) {
     models.line.push(new Line(x, y, program));
-  } else if (model === "square") {
+  } else if (model === "square" && !isPolygon) {
     models.square.push(new Square(x, y, program));
-  } else if (model === "rectangle") {
+  } else if (model === "rectangle" && !isPolygon) {
     models.rectangle.push(new Rectangle(x, y, program));
   } else if (model === "polygon") {
-    polyPoints.push(x,y);
+    polyPoints.push(x, y);
   } else {
     // dapet objectnya
     // edit mode
