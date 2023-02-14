@@ -1,23 +1,49 @@
 /* ==== Element and event listener ==== */
+let isPolygon = false;
+let polyPoints = [];
 const lineButton = document.getElementById("line");
 lineButton.addEventListener("click", function () {
+  hideDrawPolyButtons();
+  isPolygon = false;
   drawType = "line";
 });
 
 const squareButton = document.getElementById("square");
 squareButton.addEventListener("click", function () {
+  hideDrawPolyButtons();
+  isPolygon = false;
   drawType = "square";
 });
 
 const rectangleButton = document.getElementById("rectangle");
 rectangleButton.addEventListener("click", function () {
+  hideDrawPolyButtons();
+  isPolygon = false;
   drawType = "rectangle";
 });
 
+
 const polygonButton = document.getElementById("polygon");
 polygonButton.addEventListener("click", function () {
+  showDrawPolyButtons();
+});
+
+
+const startDrawPolygonButton = document.getElementById("mulai-gambar-polygon");
+startDrawPolygonButton.addEventListener("click", function () {
+  isPolygon = true;
   drawType = "polygon";
 });
+
+const stopDrawPolygonButton = document.getElementById("stop-gambar-polygon")
+stopDrawPolygonButton.addEventListener("click", function() {
+  isPolygon = false;
+  drawType = "";
+  console.log(polyPoints);
+  models.polygon.push(new Polygon(polyPoints, program));
+  polyPoints = [];
+})
+;
 
 const undoButton = document.getElementById("undo");
 undoButton.addEventListener("click", function () {
@@ -195,7 +221,7 @@ function createShaderProgram(vertexShaderText, fragmentShaderText) {
   return program;
 }
 
-/* size is component per vertecies */
+/* size is component per vertices */
 function render(
   gl,
   program,
@@ -261,7 +287,7 @@ function draw(model, x, y) {
   } else if (model === "rectangle") {
     models.rectangle.push(new Rectangle(x, y, program));
   } else if (model === "polygon") {
-    //polygon
+    polyPoints.push(x,y);
   } else {
     // dapet objectnya
     // edit mode
@@ -322,6 +348,7 @@ function resetState() {
   models.polygon = [];
   models.rectangle = [];
   models.square = [];
+  polyPoints = [];
 }
 
 function renderObject() {
@@ -355,3 +382,13 @@ window.requestAnimFrame = (function () {
 })();
 
 renderObject(program);
+
+function hideDrawPolyButtons() {
+  startDrawPolygonButton.hidden = true;
+  stopDrawPolygonButton.hidden = true;
+}
+
+function showDrawPolyButtons() {
+  startDrawPolygonButton.hidden = false;
+  stopDrawPolygonButton.hidden = false;
+}
