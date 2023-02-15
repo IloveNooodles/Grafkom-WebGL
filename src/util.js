@@ -99,6 +99,14 @@ function centroid(matrix) {
   return [x,y];
 }
 
+// function destroySliderEventListener() {
+//   const xSlider = document.getElementById("x-translation");
+//   const ySlider = document.getElementById("y-translation");
+
+//   // xSlider.removeEventListener("input", sliderMovedX);
+//   // ySlider.removeEventListener("input", sliderMovedY);
+// }
+
 function selectObject(x, y) {
   let keys = Object.keys(models);
   let mousePos = transformCoordinate(canvas, x, y)
@@ -111,17 +119,38 @@ function selectObject(x, y) {
         // console.log("jumlah iterasi");
         // let shapeCentroid = centroid(model.positions);
         if (euclidDistance(mousePos, model.centroid) <= minDistance) {
-          model.selected = true;
+          /* Kasus objek telah dipilih, dan akan memilih salah satu titik
+          dari objek tersebut */
+          if (model.selected === true) {
+            selectVertex(model, mousePos);
+          } else {
+            model.selected = true;
+            let type = key;
+            console.log(key);
+            translation(type, positions, canvas, gl, program);
+          }
           // console.log("1");
-          console.log(model.selected)
+          console.log(model.selected);
         } else {
           model.selected = false;
-          console.log(model.selected)
+          console.log(model.selected);
         }
       }
     }
   }
   return;
+}
+
+
+
+function selectVertex(model, mousePos) {
+  let vertexCount = model.positions.length;
+  let minDistance = 0.2;
+  for (i = 0; i < vertexCount; i++) {
+    if (euclidDistance(mousePos, model.positions[i]) <= minDistance) {
+      //vertex berhasil dipilih
+    }
+  }
 }
 
 /* flatten 2d array to 1d */
