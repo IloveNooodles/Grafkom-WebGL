@@ -127,7 +127,7 @@ function selectObject(x, y) {
             model.selected = true;
             let type = key;
             console.log(key);
-            translation(type, positions, canvas, gl, program);
+            translation(type, model.positions, canvas, gl, program);
           }
           // console.log("1");
           console.log(model.selected);
@@ -148,7 +148,8 @@ function selectVertex(model, mousePos) {
   let minDistance = 0.2;
   for (i = 0; i < vertexCount; i++) {
     if (euclidDistance(mousePos, model.positions[i]) <= minDistance) {
-      //vertex berhasil dipilih
+      console.log("titik terpilih");
+      console.log(model.positions[i]);
     }
   }
 }
