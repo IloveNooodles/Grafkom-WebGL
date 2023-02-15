@@ -85,7 +85,9 @@ function euclidDistance(pointA, pointB) {
 function centroid(matrix) {
   let x = 0;
   let y = 0;
-  let vertexCount = matrix[0].length;
+  // console.log(matrix);
+  let vertexCount = matrix.length;
+  // console.log(vertexCount);
   for (i = 0; i < vertexCount; i++) {
     x += matrix[i][0];
     y += matrix[i][1];
@@ -107,8 +109,8 @@ function selectObject(x, y) {
       console.log(models[key]);
       for (let model of models[key]) {
         // console.log("jumlah iterasi");
-        let shapeCentroid = centroid(model.positions);
-        if (euclidDistance(mousePos, shapeCentroid) <= minDistance) {
+        // let shapeCentroid = centroid(model.positions);
+        if (euclidDistance(mousePos, model.centroid) <= minDistance) {
           model.selected = true;
           // console.log("1");
           console.log(model.selected)

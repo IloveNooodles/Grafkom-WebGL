@@ -6,6 +6,7 @@ class Shape {
     this.scale = [0, 0];
     this.rotation = 0;
     this.translation = [0, 0];
+    this.centroid = [0, 0]
   }
 
   copy(obj) {
@@ -48,6 +49,10 @@ class Shape {
   render() {
     throw new Error("Must be implemented");
   }
+
+  setCentroid() {
+    this.centroid = centroid(this.positions);
+  }
 }
 
 /* TODO: Define inheritance of the models */
@@ -61,6 +66,10 @@ class Line extends Shape {
   }
 
   render(program) {
+    this.setCentroid();
+    // console.log(this.positions);
+    // console.log(this.centroid);
+
     renderColor(program, flatten(this.colors), 4);
     renderVertex(program, flatten(this.positions), 2);
     for (let i = 0; i < this.positions.length; i += 2) {
@@ -95,8 +104,11 @@ class Square extends Shape {
   }
 
   render(program) {
+    this.setCentroid();
+    // console.log(this.positions);
+    // console.log(this.positions.length);
     let arrSize = this.positions.length;
-
+    
     renderColor(program, flatten(this.colors), 4);
     renderVertex(program, flatten(this.positions), 2);
     for (let i = 0; i < arrSize; i += 4) {
@@ -114,6 +126,8 @@ class Rectangle extends Shape {
     }
   }
   render(program) {
+    this.setCentroid();
+
     let recSize = this.positions.length;
     // console.log(this.positions);
     renderColor(program, flatten(this.colors), 4);
@@ -149,6 +163,8 @@ class Polygon extends Shape {
     // let polyCentroid = centroid(this.positions);
     // console.log(polyCentroid[0]);
     // console.log(polyCentroid[1]);
+    this.setCentroid();
+
     let vertexCount = this.positions.length;
     renderColor(program, flatten(this.colors), 4);
     renderVertex(program, flatten(this.positions), 2);
