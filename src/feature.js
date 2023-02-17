@@ -1,6 +1,4 @@
-var isChecked = true;
-
-function translation(type, positions, canvas, gl, program) {
+function translation(positions, canvas) {
   //horizontal translation
   const xSlider = document.getElementById("x-translation");
   let tempX = 0;
@@ -9,7 +7,6 @@ function translation(type, positions, canvas, gl, program) {
   xSlider.addEventListener("input", function () {
     let x = transformCoordinate(canvas, parseInt(xSlider.value), 0);
     let xTranslation = x[0] + 1;
-    newPositions = positions;
     for (let i = 0; i < newPositions.length; i++) {
       newPositions[i][0] += xTranslation - tempX;
     }
@@ -31,21 +28,9 @@ function translation(type, positions, canvas, gl, program) {
     tempY = yTranslation;
   });
 
-  clear();
-  if (type == "line") {
-    renderVertex(program, newPositions, 2);
-    for (let i = 0; i < newPositions.length; i++) {
-      gl.drawArrays(gl.LINES, i, 2);
-    }
-  } else if (type == "square" || type == "rectangle") {
-    renderVertex(program, newPositions, 2);
-    for (let i = 0; i < newPositions.length; i++) {
-      gl.drawArrays(gl.TRIANGLE_FAN, i, 4);
-    } 
-  }
 }
 
-function dilatation(type, positions, gl, program) {
+function dilatation(positions) {
   const scaleSlider = document.getElementById("dilatation");
   let newPositions = positions;
   let temp = 1;
@@ -57,58 +42,63 @@ function dilatation(type, positions, gl, program) {
       newPositions[i][1] *= scale / temp;
     }
     temp = scale;
-
-    clear();
-    if (type == "line") {
-      renderVertex(program, newPositions, 2);
-      for (let i = 0; i < newPositions.length; i++) {
-        gl.drawArrays(gl.LINES, i, 2);
-      }
-    } else if (type == "square" || type == "rectangle") {
-      renderVertex(program, newPositions, 2);
-      for (let i = 0; i < newPositions.length; i++) {
-        gl.drawArrays(gl.TRIANGLE_FAN, i, 4);
-      }
-    }
   });
 }
 
-function changeColor(colors, points, canvas, gl, program) {
-  let colorInput = document.getElementById("color");
-  let newColors = colors;
-  colorInput.addEventListener("input", function () {
-    let color = parseInt(colorInput.value);
-    color = getRGB(color);
-    if (isChecked) {
-      for (let i = 0; i < newColors.length; i += 4) {
-        newColors[i] = color.r;
-        newColors[i + 1] = color.g;
-        newColors[i + 2] = color.b;
-      }
-    } else {
-      // canvas.addEventListener("mousedown", function (e) {
-      //   console.log("click")
-      //   let { x, y } = getMousePosition(canvas, e);
-      //   let { realWidth, realHeight } = transformCoordinate(canvas, x, y);
-      //   let index = getNearestPoint(realWidth, realHeight, points);
-      //   newColors[index] = color.r;
-      //   newColors[index+1] = color.g;
-      //   newColors[index+2] = color.b;
-      // });
-    }
+function shear(positions, canvas) {
+  const shearSlider = document.getElementById("shear");
+  let temp = 0;
+  let newPositions = positions;
 
-    renderColor(program, newColors, 4);
-    clear();
-    for (let i = 0; i < points.length; i ++) {
-      gl.drawArrays(gl.LINES, i, 2);
+  shearSlider.addEventListener("input", function () {
+    let shearValue = transformCoordinate(canvas, parseInt(shearSlider.value), 0);
+    let shear = shearValue[0] + 1;
+    for (let i = 0; i < newPositions.length/2; i++) {
+      newPositions[i][0] += shear - temp;
     }
+    temp = shear;
   });
 }
 
-function handleAllPoints(value) {
-  if (value == "all") {
-    isChecked = true;
-  } else {
-    isChecked = false;
-  }
+// function rotation (type, positions, gl, program){
+//   const rotationSlider = document.getElementById("rotation");
+//   let newPositions = positions;
+//   let temp = 0;
+//   console.log(newPositions)
+//   rotationSlider.addEventListener("input", function () {
+//     let rotation = rotationSlider.value*Math.PI/180;
+//     var center = getCentroid(newPositions);
+//     //rotation on coordinate
+//     for (let i = 0; i < newPositions.length; i += 1) {
+//       newPositions[i][0] = (newPositions[i][0] - center[0]) * Math.cos(rotation - temp) - (newPositions[i][1] - center[1]) * Math.sin(rotation - temp) + center[0];
+//       newPositions[i][1] = (newPositions[i][0] - center[0]) * Math.sin(rotation - temp) + (newPositions[i][1] - center[1]) * Math.cos(rotation - temp) + center[1];
+//     temp = rotation;
+//     }
+//     clear();
+//     if (type == "line") {
+//       renderVertex(program, newPositions, 2);
+//       for (let i = 0; i < newPositions.length; i++) {
+//         gl.drawArrays(gl.LINES, i, 2);
+//       }
+//     } else if (type == "square" || type == "rectangle") {
+//       renderVertex(program, newPositions, 2);
+//       for (let i = 0; i < newPositions.length; i++) {
+//         gl.drawArrays(gl.TRIANGLE_FAN, i, 4);
+//       }
+//     }
+//   });
+// }
+
+function changeColor(model){
+  const colorSlider = document.getElementById("color");
+  colorSlider.addEventListener("input", function () {
+    let color = getRGB(colorSlider.value);
+    for (let i = 0; i < model.positions.length; i += 1) {
+      if (model.positions[i] == model.selectedVertices){
+        model.colors[i][0] = color.r;
+        model.colors[i][1] = color.g;
+        model.colors[i][2] = color.b;
+      }
+    }
+  });
 }

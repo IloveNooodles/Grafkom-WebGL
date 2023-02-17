@@ -115,9 +115,19 @@
           value="1"
           id="dilatation"
         />
+        <label for="shear">X : </label>
+        <input
+          type="range"
+          min="0"
+          max="800"
+          step="10"
+          value="0"
+          id="shear"
+        />
         <label for="Size">Size : </label>
         <input type="range" min="5" max="360" step="20" value="100" id="size" />
         <button id="clear" name="selected-feature" value="clear">clear</button>
+        <button id="edit" name="selected-feature" value="edit">edit</button>
       </div>
     </div>
     <script src="util.js"></script>

@@ -111,29 +111,22 @@ function selectObject(x, y) {
   let keys = Object.keys(models);
   let mousePos = transformCoordinate(canvas, x, y)
   let minDistance = 0.2;
-  // console.log("1");
+
   for (let key of keys) {
     if (models[key].length !== 0) {
-      console.log(models[key]);
       for (let model of models[key]) {
-        // console.log("jumlah iterasi");
-        // let shapeCentroid = centroid(model.positions);
         if (euclidDistance(mousePos, model.centroid) <= minDistance) {
-          /* Kasus objek telah dipilih, dan akan memilih salah satu titik
-          dari objek tersebut */
           if (model.selected === true) {
             selectVertex(model, mousePos);
+            changeColor(model);
           } else {
             model.selected = true;
-            let type = key;
-            console.log(key);
-            translation(type, model.positions, canvas, gl, program);
+            translation( model.positions, canvas);
+            dilatation( model.positions);
+            shear( model.positions, canvas);
           }
-          // console.log("1");
-          console.log(model.selected);
         } else {
           model.selected = false;
-          console.log(model.selected);
         }
       }
     }
@@ -141,15 +134,25 @@ function selectObject(x, y) {
   return;
 }
 
-
+function reset(){
+  let keys = Object.keys(models);
+  for (let key of keys) {
+    if (models[key].length !== 0) {
+      for (let model of models[key]) {
+        model.selected = false;
+        model.selectedVertices = [];
+      }
+    }
+  }
+}
 
 function selectVertex(model, mousePos) {
   let vertexCount = model.positions.length;
   let minDistance = 0.2;
+  console.log("model", model.positions)
   for (i = 0; i < vertexCount; i++) {
     if (euclidDistance(mousePos, model.positions[i]) <= minDistance) {
-      console.log("titik terpilih");
-      console.log(model.positions[i]);
+      model.selectedVertices = model.positions[i];
     }
   }
 }

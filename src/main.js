@@ -42,14 +42,10 @@ stopDrawPolygonButton.addEventListener("click", function () {
   polyPoints = [];
 });
 
-const undoButton = document.getElementById("undo");
-undoButton.addEventListener("click", function () {
-  console.log("undo");
-});
 
-const redoButton = document.getElementById("redo");
-redoButton.addEventListener("click", function () {
-  console.log("redo");
+const editButton = document.getElementById("edit");
+editButton.addEventListener("click", function () {
+  drawType = "edit";
 });
 
 const clearButton = document.getElementById("clear");
@@ -77,16 +73,6 @@ const scaleSlider = document.getElementById("size");
 scaleSlider.addEventListener("input", function (e) {
   size = parseInt(scaleSlider.value);
 });
-
-// const changeColorButton = document.getElementById("change-color");
-// changeColorButton.addEventListener("change", function () {
-//   canvas.addEventListener("mousedown", function (e) {
-//     let { x, y } = getMousePosition(canvas, e);
-//     let { realWidth, realHeight } = transformCoordinate(canvas, x, y);
-//     let nearestPoint = getNearestPoint(realWidth, realHeight, points);
-//   }
-//   );
-// });
 
 const canvas = document.getElementById("canvas");
 canvas.addEventListener("mousemove", function (e) {

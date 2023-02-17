@@ -3,6 +3,7 @@ class Shape {
     this.positions = [];
     this.colors = [];
     this.selected = false;
+    this.selectedVetrices = [];
     this.scale = [0, 0];
     this.rotation = 0;
     this.translation = [0, 0];
@@ -178,54 +179,3 @@ class Polygon extends Shape {
     // }
   }
 }
-
-function line(canvas, gl, program, x, y) {
-  for (i = 0; i < 2; i++) {
-    lineState.positions.push(transformCoordinate(canvas, x, y));
-    lineState.colors.push(0, 0, 0, 1);
-  }
-
-  translation("line", lineState.positions, canvas, gl, program);
-  dilatation("line", lineState.positions, gl, program);
-  // changeColor(
-  //   "line",
-  //   lineState.colors,
-  //   lineState.positions,
-  //   canvas,
-  //   gl,
-  //   program
-  // );
-}
-
-function square(canvas, gl, program, x, y) {
-  /* add vertices by clockwise manner */
-  let tempPosition = [];
-  let tempColor = [];
-  tempPosition.push(transformCoordinate(canvas, x, y));
-  tempPosition.push(transformCoordinate(canvas, x + size, y));
-  tempPosition.push(transformCoordinate(canvas, x, y + size));
-  tempPosition.push(transformCoordinate(canvas, x + size, y + size));
-
-  /* colors */
-  for (let i = 0; i < 4; i++) {
-    tempColor.push([0, 0, 0, 1]);
-  }
-
-  squareState.colors.push(...tempColor);
-  squareState.positions.push(...tempPosition);
-
-  translation("square", squareState.positions, canvas, gl, program);
-  dilatation("square", squareState.positions, gl, program);
-}
-
-function rectangle(canvas, gl, program, x, y) {
-  for (let i = 0; i < 4; i++) {
-    rectangleState.positions.push(transformCoordinate(canvas, x, y));
-    rectangleState.colors.push([0, 0, 0, 1]);
-  }
-
-  translation("rectangle", rectangleState.positions, canvas, gl, program);
-  dilatation("rectangle", rectangleState.positions, gl, program);
-}
-
-function polygon() {}
