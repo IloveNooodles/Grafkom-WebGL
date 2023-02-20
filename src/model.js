@@ -152,6 +152,7 @@ class Rectangle extends Shape {
 class Polygon extends Shape {
   constructor(polyPoints) {
     super();
+    this.polyPoints = polyPoints;
     // console.log(polyPoints);
     let vertexCount = polyPoints.length / 2;
     // console.log(vertexCount);
@@ -162,6 +163,11 @@ class Polygon extends Shape {
       );
       this.colors.push([r, g, b, 1]);
     }
+  }
+
+  copy(obj) {
+    super.copy(obj);
+    this.polyPoints = obj.polyPoints;
   }
 
   render(program) {

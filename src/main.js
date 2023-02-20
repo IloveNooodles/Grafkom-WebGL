@@ -37,8 +37,7 @@ const stopDrawPolygonButton = document.getElementById("stop-gambar-polygon");
 stopDrawPolygonButton.addEventListener("click", function () {
   isPolygon = false;
   drawType = "";
-  // console.log(polyPoints);
-  models.polygon.push(new Polygon(polyPoints, program));
+  models.polygon.push(new Polygon(polyPoints));
   polyPoints = [];
 });
 
@@ -48,7 +47,7 @@ editButton.addEventListener("click", function () {
 });
 
 const clearButton = document.getElementById("clear");
-clearButton.addEventListener("click", function () {
+clearButton.addEventListener("click", function (e) {
   clear();
   resetState();
 });
@@ -117,7 +116,6 @@ const fragmentShaderText = `
   varying vec4 fragColor;
   void main() {
     gl_FragColor = fragColor;
-    // gl_FragColor = vec4(0.2,1,0.3, 1);
   }`;
 
 const gl = canvas.getContext("webgl");
@@ -318,8 +316,9 @@ function loadModel(loadedModel) {
         obj.copy(item);
         models[key].push(obj);
       } else if (key === "polygon") {
-        let obj = new Polygon();
+        let obj = new Polygon(polyPoints);
         obj.copy(item);
+        console.log(item, obj);
         models[key].push(obj);
       }
     }
