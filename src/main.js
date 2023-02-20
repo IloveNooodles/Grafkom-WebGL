@@ -37,11 +37,10 @@ const stopDrawPolygonButton = document.getElementById("stop-gambar-polygon");
 stopDrawPolygonButton.addEventListener("click", function () {
   isPolygon = false;
   drawType = "";
-  console.log(polyPoints);
+  // console.log(polyPoints);
   models.polygon.push(new Polygon(polyPoints, program));
   polyPoints = [];
 });
-
 
 const editButton = document.getElementById("edit");
 editButton.addEventListener("click", function () {
@@ -72,6 +71,11 @@ loadInput.addEventListener("input", function (e) {
 const scaleSlider = document.getElementById("size");
 scaleSlider.addEventListener("input", function (e) {
   size = parseInt(scaleSlider.value);
+});
+
+const color = document.getElementById("color");
+color.addEventListener("input", function (e) {
+  rgb = e.target.value;
 });
 
 const canvas = document.getElementById("canvas");
@@ -129,6 +133,8 @@ let models = {
   rectangle: [],
   polygon: [],
 };
+
+let rgb = "#000000";
 
 /* ==== Function ==== */
 window.onload = function start() {

@@ -7,7 +7,7 @@ class Shape {
     this.scale = [0, 0];
     this.rotation = 0;
     this.translation = [0, 0];
-    this.centroid = [0, 0]
+    this.centroid = [0, 0];
   }
 
   copy(obj) {
@@ -60,9 +60,10 @@ class Shape {
 class Line extends Shape {
   constructor(x, y) {
     super();
+    let { r, g, b } = getRGB(rgb);
     for (let i = 0; i < 2; i++) {
       this.positions.push(transformCoordinate(canvas, x, y));
-      this.colors.push([0, 0, 0, 1]);
+      this.colors.push([r, g, b, 1]);
     }
   }
 
@@ -94,10 +95,10 @@ class Square extends Shape {
     tempPosition.push(transformCoordinate(canvas, x + size, y));
     tempPosition.push(transformCoordinate(canvas, x, y + size));
     tempPosition.push(transformCoordinate(canvas, x + size, y + size));
-
+    let { r, g, b } = getRGB(rgb);
     /* colors */
     for (let i = 0; i < 4; i++) {
-      tempColor.push([0, 0, 0, 1]);
+      tempColor.push([r, g, b, 1]);
     }
 
     this.colors.push(...tempColor);
@@ -109,7 +110,7 @@ class Square extends Shape {
     // console.log(this.positions);
     // console.log(this.positions.length);
     let arrSize = this.positions.length;
-    
+
     renderColor(program, flatten(this.colors), 4);
     renderVertex(program, flatten(this.positions), 2);
     for (let i = 0; i < arrSize; i += 4) {
@@ -121,9 +122,10 @@ class Square extends Shape {
 class Rectangle extends Shape {
   constructor(x, y) {
     super();
+    let { r, g, b } = getRGB(rgb);
     for (let i = 0; i < 4; i++) {
       this.positions.push(transformCoordinate(canvas, x, y));
-      this.colors.push([0, 0, 0, 1]);
+      this.colors.push([r, g, b, 1]);
     }
   }
   render(program) {
@@ -153,10 +155,13 @@ class Polygon extends Shape {
     // console.log(polyPoints);
     let vertexCount = polyPoints.length / 2;
     // console.log(vertexCount);
+    let { r, g, b } = getRGB(rgb);
     for (let i = 0; i < polyPoints.length; i += 2) {
-      this.positions.push(transformCoordinate(canvas, polyPoints[i], polyPoints[i + 1]));
-      this.colors.push([0, 0, 0, 1]);
-    }  
+      this.positions.push(
+        transformCoordinate(canvas, polyPoints[i], polyPoints[i + 1])
+      );
+      this.colors.push([r, g, b, 1]);
+    }
   }
 
   render(program) {
