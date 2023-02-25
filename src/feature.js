@@ -69,6 +69,19 @@ function editObject() {
         model.positions[i][0] += xTranslation - tempX;
       }
     }
+
+    for (let p = 0; p < pointList.length; p++) {
+      let model = pointList[p];
+      if ((model.constructor.name == "Square") || (model.constructor.name == "Rectangle")) {
+        for (let i = 0; i < model.positions.length; i++) {
+          model.positions[i][0] += xTranslation - tempX;
+        }
+      } else {
+        //line and polygon
+        model.positions[pointIndex[p] - 1][0] += xTranslation - tempX;
+      }
+    }
+
     tempX = xTranslation;
   });
 
@@ -85,6 +98,19 @@ function editObject() {
         model.positions[i][1] += yTranslation - tempY;
       }
     }
+
+    for (let p = 0; p < pointList.length; p++) {
+      let model = pointList[p];
+      if ((model.constructor.name == "Square") || (model.constructor.name == "Rectangle")) {
+        for (let i = 0; i < model.positions.length; i++) {
+          model.positions[i][1] += yTranslation - tempY;
+        }
+      } else {
+        //line and polygon
+        model.positions[pointIndex[p] - 1][1] += yTranslation - tempY;
+      }
+    }
+
     tempY = yTranslation;
   });
 
@@ -164,6 +190,8 @@ function editObject() {
       showPointPolyButtons();
       editablePolygon = pointList[i];
       editablePolygonPointIndex.push(pointIndex[i] - 1);
+
+      editablePolygon.colors[editablePolygonPointIndex] = [1, 1, 1 ,1];
       console.log(editablePolygonPointIndex);
     }
   }
