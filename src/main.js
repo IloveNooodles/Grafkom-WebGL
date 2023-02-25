@@ -90,7 +90,6 @@ canvas.addEventListener("mousedown", function (e) {
   let { x, y } = getMousePosition(canvas, e);
   isDown = true;
   draw(drawType, x, y, size);
-  selectObject(x, y);
 });
 
 canvas.addEventListener("mouseup", function (e) {
@@ -281,7 +280,7 @@ function draw(model, x, y) {
     // dapet objectnya
     // edit mode
     // scale, ngubarh warna dll
-    return;
+    selectObject(x, y);
   }
 }
 

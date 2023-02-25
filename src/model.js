@@ -176,8 +176,10 @@ class Polygon extends Shape {
     // console.log(polyCentroid[0]);
     // console.log(polyCentroid[1]);
     this.setCentroid();
-
     let vertexCount = this.positions.length;
+    this.positions = convexHull(this.positions, vertexCount);
+    
+
     renderColor(program, flatten(this.colors), 4);
     renderVertex(program, flatten(this.positions), 2);
     // console.log(vertexCount);

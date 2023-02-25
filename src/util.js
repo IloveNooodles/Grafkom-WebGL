@@ -116,10 +116,15 @@ function selectObject(x, y) {
     if (models[key].length !== 0) {
       for (let model of models[key]) {
         if (euclidDistance(mousePos, model.centroid) <= minDistance) {
+          /* Kasus memilih titik */
           if (model.selected === true) {
             selectVertex(model, mousePos);
             changeColor(model);
-          } else {
+          } 
+          /* Kasus memilih bentuk */
+          else {
+            // console.log("masuk sini");
+            highlightSelected(program, model.centroid);
             model.selected = true;
             translation(model.positions, canvas);
             dilatation(model.positions);
@@ -183,4 +188,50 @@ function flatten(matrix) {
   }
 
   return result;
+}
+
+function orientationOf3Points(pointA, pointB, pointC) {
+  let val = (pointB[1] - pointA[1]) * (pointC[0] - pointB[0]) - 
+            (pointB[0] - pointA[0]) * (pointC[1] - pointB[1]);
+
+  if (val == 0) {
+    return 0;
+  }
+  return (val > 0)? 1:2;
+}
+
+function leftMostPointIndex(positions, vertexCount) {
+  let leftMostPtIndex = 0;
+  for (let i = 1; i < vertexCount; i ++) {
+    if (positions[i][0] < positions[leftMostPtIndex][0]){
+      leftMostPtIndex = i;
+    }
+  }
+  return leftMostPtIndex;
+}
+
+function convexHull(positions, vertexCount) {
+  if (vertexCount < 3) {
+    return;
+  }
+
+  let finalConvexHull = [];
+  let leftMostPtIndex = leftMostPointIndex(positions, vertexCount)
+
+  let firstPointIndex = leftMostPtIndex;
+  let secondPointIndex;
+  do {
+    finalConvexHull.push(positions[firstPointIndex]);
+    
+    secondPointIndex = (firstPointIndex + 1) % vertexCount;
+
+    for (let i = 0; i < vertexCount; i ++) {
+      if (orientationOf3Points(positions[firstPointIndex], positions[i], positions[secondPointIndex]) == 2) {
+        secondPointIndex = i;
+      }
+    }
+    firstPointIndex = secondPointIndex
+  } while (firstPointIndex != leftMostPtIndex)
+
+  return finalConvexHull;
 }
