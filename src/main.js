@@ -102,11 +102,6 @@ undoButton.addEventListener("click", function () {
 
 });
 
-const color = document.getElementById("color");
-color.addEventListener("input", function (e) {
-  rgb = e.target.value;
-});
-
 const canvas = document.getElementById("canvas");
 canvas.addEventListener("mousemove", function (e) {
   if (isDown) {

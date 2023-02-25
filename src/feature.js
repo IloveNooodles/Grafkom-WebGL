@@ -70,6 +70,8 @@ function shear(positions, canvas) {
     }
     tempShear = shear;
   });
+
+  
 }
 
 // function rotation (type, positions, gl, program){
@@ -120,6 +122,7 @@ function editObject() {
   checked = [];
   modelList = [];
   pointList = [];
+  pointIndex = [];
   for (let i = 0; i < checkbox.length; i++) {
     if (checkbox[i].checked) {
       checked.push(checkbox[i].value);
@@ -128,6 +131,7 @@ function editObject() {
   let list = filterSelectedObject(checked);
   modelList = list[0];
   pointList = list[1];
+  pointIndex = list[2];
 
   const xSlider = document.getElementById("x-translation");
   tempX = 0;
@@ -198,33 +202,46 @@ function editObject() {
     tempShear = shear;
   });
 
-  //add and delete polygon points
-  for (let i = 0; i < modelList.length; i ++) {
+  //change color
+  const colorSlider = document.getElementById("color");
+  colorSlider.addEventListener("input", function () {
+    let color = getRGB(colorSlider.value);
+    console.log(color);
+    for (let p = 0; p < modelList.length; p++) {
+      let model = modelList[p];
+      console.log(model);
+      for (let i = 0; i < model.positions.length; i += 1) {
+        model.colors[i][0] = color.r;
+        model.colors[i][1] = color.g;
+        model.colors[i][2] = color.b;
+      }
+    }
+    for (let p = 0; p < pointList.length; p++) {
+      let model = pointList[p];
+      model.colors[pointIndex[p]-1][0] = color.r;
+      model.colors[pointIndex[p]-1][1] = color.g;
+      model.colors[pointIndex[p]-1][2] = color.b;
+    }
+  });
+
+  for (let i = 0; i < modelList.length; i++) {
     if (modelList[i].constructor.name == "Polygon") {
       showPointPolyButtons();
       isPolygon = true;
       drawType = "polygon";
-      editablePolygonIndex = i;    
+      editablePolygonIndex = i;
     } else {
       hidePointPolyButtons();
     }
   }
-  // console.log(checked)
-  // if (checked.length > 0) {
-  //   for (let p=0; p<checked.length; p++){
-  //     let model = checked[p][0];
-  //     if(model == "l"){
-  //       console.log(models.line[checked[p][1]-1])
-  //       modelList.push(models.line[checked[p][1]-1])
-  //     }
-  //   }
-  // }
+
 }
 
 function filterSelectedObject(array) {
   let selectedModel = [];
   let selectedPoint = [];
   let modelInserted = [];
+  let pointIndex = [];
 
   for (let i = 0; i < array.length; i++) {
     let m = array[i][0];
@@ -244,25 +261,30 @@ function filterSelectedObject(array) {
         modelInserted.push(array[i]);
       }
     } else {
-      // let point = array[i].split("point")
-      // console.log(point)
-      // if (!modelInserted.includes(array[i])){
-      //   if (m == "l"){
-      //     selectedPoint.push(models.line[array[i][1]-1])
-      //     modelInserted.push(array[i]);
-      //   }else if(m == "s"){
-      //     selectedPoint.push(models.square[array[i][1]-1])
-      //     modelInserted.push(array[i]);
-      //   }else if(m == "r"){
-      //     selectedPoint.push(models.rectangle[array[i][1]-1])
-      //     modelInserted.push(array[i]);
-      //   }
-      // }
+      let point = array[i].split("point")
+      console.log(point)
+      if (!modelInserted.includes(point[0])){
+        if (m == "l"){
+          selectedPoint.push(models.line[array[i][1]-1])
+          modelInserted.push(array[i]);
+          pointIndex.push(point[1]);
+        }else if(m == "s"){
+          selectedPoint.push(models.square[array[i][1]-1])
+          modelInserted.push(array[i]);
+          pointIndex.push(point[1]);
+        }else if(m == "r"){
+          selectedPoint.push(models.rectangle[array[i][1]-1])
+          modelInserted.push(array[i]);
+          pointIndex.push(point[1]);
+        }else if(m == "p"){
+          selectedPoint.push(models.polygon[array[i][1]-1])
+          modelInserted.push(array[i]);
+          pointIndex.push(point[1]);
+        }
+      }
     }
   }
-  console.log(selectedModel);
-  console.log(selectedPoint);
-  return [selectedModel, selectedPoint];
+  return [selectedModel, selectedPoint, pointIndex];
 }
 
 function printModels(model, obj) {
@@ -271,7 +293,6 @@ function printModels(model, obj) {
   pointCount = obj[objCount - 1].positions.length;
   console.log(obj[obj.length - 1].positions);
   let list = document.getElementById("list");
-  document.createElement("ul");
   object = document.createElement("li");
   object.innerHTML = `
   <input type="checkbox" id="${model[0]}${obj.length}" name="${model[0]}${obj.length}" value="${model[0]}${obj.length}" >
