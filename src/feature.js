@@ -37,6 +37,8 @@ let tempRotation = 0;
 // }
 
 function editObject() {
+  hidePointPolyButtons();
+  editablePolygonPointIndex = []
   let checkbox = document.querySelectorAll("input[type=checkbox]");
   checked = [];
   modelList = [];
@@ -51,6 +53,8 @@ function editObject() {
   modelList = list[0];
   pointList = list[1];
   pointIndex = list[2];
+  console.log(pointList);
+  console.log(pointIndex);
 
   const xSlider = document.getElementById("x-translation");
   tempX = 0;
@@ -128,7 +132,7 @@ function editObject() {
     console.log(color);
     for (let p = 0; p < modelList.length; p++) {
       let model = modelList[p];
-      console.log(model);
+      // console.log(model);
       for (let i = 0; i < model.positions.length; i += 1) {
         model.colors[i][0] = color.r;
         model.colors[i][1] = color.g;
@@ -137,6 +141,8 @@ function editObject() {
     }
     for (let p = 0; p < pointList.length; p++) {
       let model = pointList[p];
+      console.log(pointIndex[p]);
+      console.log(pointIndex);
       model.colors[pointIndex[p]-1][0] = color.r;
       model.colors[pointIndex[p]-1][1] = color.g;
       model.colors[pointIndex[p]-1][2] = color.b;
@@ -144,16 +150,25 @@ function editObject() {
   });
 
   //add and delete polygon points
-  for (let i = 0; i < modelList.length; i++) {
+  for (let i = 0; i < modelList.length; i ++) {
     if (modelList[i].constructor.name == "Polygon") {
       showPointPolyButtons();
       isPolygon = true;
       drawType = "polygon";
-      editablePolygonIndex = i;
-    } else {
-      hidePointPolyButtons();
+      editablePolygon = modelList[i];
+    } 
+  }
+
+  for (let i = 0; i < pointList.length; i ++) {
+    if (pointList[i].constructor.name == "Polygon") {
+      showPointPolyButtons();
+      editablePolygon = pointList[i];
+      editablePolygonPointIndex.push(pointIndex[i] - 1);
+      console.log(editablePolygonPointIndex);
     }
   }
+
+  
 
 }
 
