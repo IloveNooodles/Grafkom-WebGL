@@ -106,11 +106,14 @@ function centroid(matrix) {
 //   // xSlider.removeEventListener("input", sliderMovedX);
 //   // ySlider.removeEventListener("input", sliderMovedY);
 // }
-
+let keys;
+let mousePos ;
+let minDistance;
+let vertexCount;
 function selectObject(x, y) {
-  let keys = Object.keys(models);
-  let mousePos = transformCoordinate(canvas, x, y);
-  let minDistance = 0.2;
+  keys = Object.keys(models);
+  mousePos = transformCoordinate(canvas, x, y);
+  minDistance = 0.2;
 
   for (let key of keys) {
     if (models[key].length !== 0) {
@@ -140,7 +143,7 @@ function selectObject(x, y) {
 }
 
 function reset() {
-  let keys = Object.keys(models);
+  keys = Object.keys(models);
   for (let key of keys) {
     if (models[key].length !== 0) {
       for (let model of models[key]) {
@@ -152,8 +155,8 @@ function reset() {
 }
 
 function selectVertex(model, mousePos) {
-  let vertexCount = model.positions.length;
-  let minDistance = 0.2;
+  vertexCount = model.positions.length;
+  minDistance = 0.2;
   for (i = 0; i < vertexCount; i++) {
     if (euclidDistance(mousePos, model.positions[i]) <= minDistance) {
       model.selectedVertices = model.positions[i];

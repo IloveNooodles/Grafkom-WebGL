@@ -61,3 +61,15 @@ h3 {
 p {
   margin: 0;
 }
+
+.content{
+  display: flex;
+  flex-direction: row;
+}
+
+.objectList{
+  color: #000;
+  width: 300px;
+  padding-left: 10px;
+  padding-top: 10px;
+}

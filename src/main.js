@@ -48,8 +48,7 @@ editButton.addEventListener("click", function () {
 
 const clearButton = document.getElementById("clear");
 clearButton.addEventListener("click", function (e) {
-  clear();
-  resetState();
+  location.reload();
 });
 
 const saveButton = document.getElementById("save");
@@ -70,6 +69,18 @@ loadInput.addEventListener("input", function (e) {
 const scaleSlider = document.getElementById("size");
 scaleSlider.addEventListener("input", function (e) {
   size = parseInt(scaleSlider.value);
+});
+
+const undoButton = document.getElementById("undo");
+undoButton.addEventListener("click", function () {
+  document.getElementById("x-translation").value = "0";
+  document.getElementById("y-translation").value = "0";
+  document.getElementById("dilation").value = "1";
+  document.getElementById("shear").value = "0";
+  document.getElementById("rotation").value = "0";
+  editObject();
+
+
 });
 
 const color = document.getElementById("color");
@@ -260,20 +271,15 @@ function draw(model, x, y) {
     return;
   }
 
-  // const positions = [0.7, 0.7, 0.3, 0.7, 0.7, 0.3, 0.3, 0.3, 0.1, 0.1];
-  // const colors = [1, 0, 0, 1, 0, 1, 0, 1, 0, 0, 1, 1];
-  // renderVertex(program, positions, 2);
-  // renderColor(program, colors, 4);
-
-  // clear();
-  // gl.drawArrays(gl.TRIANGLE_FAN, 0, 5);
-
   if (model === "line" && !isPolygon) {
     models.line.push(new Line(x, y, program));
+    printModels("line", models.line);
   } else if (model === "square" && !isPolygon) {
     models.square.push(new Square(x, y, program));
+    printModels("square", models.square);
   } else if (model === "rectangle" && !isPolygon) {
     models.rectangle.push(new Rectangle(x, y, program));
+    printModels("rectangle", models.rectangle);
   } else if (model === "polygon") {
     polyPoints.push(x, y);
   } else {
@@ -281,6 +287,7 @@ function draw(model, x, y) {
     // edit mode
     // scale, ngubarh warna dll
     selectObject(x, y);
+    return
   }
 }
 

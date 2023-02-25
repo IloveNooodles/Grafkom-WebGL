@@ -64,64 +64,82 @@
           <button id="save" name="selected-feature" value="save">
             <img width="20" height="20" src="./assets/save.png" alt="save" />
           </button>
-          <!-- <button id="load" name="selected-feature" value="load"> -->
           <input type="file" id="load" name="selected-feature" value="load" />
-          <!-- <img
-              width="20"
-              height="20"
-              src="./assets/load.png"
-              alt="load"
-            /></button -->
-          ><br />
+          <br />
           <label for="color">Color</label>
           <input type="color" id="color" name="color" value="#000000" />
+          <br />
+          <label for="x-translation">X : </label>
+          <br />
+          <input
+            type="range"
+            min="0"
+            max="800"
+            step="10"
+            value="0"
+            id="x-translation"
+          />
+          <br />
+          <label for="y-translation">Y : </label>
+          <br />
+          <input
+            type="range"
+            min="0"
+            max="800"
+            step="10"
+            value="0"
+            id="y-translation"
+          />
+          <br />
+          <label for="rotation">Rotation : </label>
+          <br />
+          <input
+            type="range"
+            min="0"
+            max="360"
+            step="10"
+            value="0"
+            id="rotation"
+          />
+          <br />
+          <label for="dilation">Dilation : </label>
+          <br />
+          <input
+            type="range"
+            min="0.1"
+            max="2"
+            step="0.1"
+            value="1"
+            id="dilation"
+          />
+          <br />
+          <label for="shear">X : </label>
+          <br />
+          <input
+            type="range"
+            min="0"
+            max="800"
+            step="10"
+            value="0"
+            id="shear"
+          />
+          <br />
+          <label for="Size">Size : </label>
+          <br />
+          <input type="range" min="5" max="360" step="20" value="100" id="size" />
         </form>
       </div>
       <div class="canvas">
-        <canvas id="canvas" width="800px" height="800px"></canvas>
-        <label for="x-translation">X : </label>
-        <input
-          type="range"
-          min="0"
-          max="800"
-          step="10"
-          value="0"
-          id="x-translation"
-        />
-        <label for="y-translation">Y : </label>
-        <input
-          type="range"
-          min="0"
-          max="800"
-          step="10"
-          value="0"
-          id="y-translation"
-        />
-        <label for="rotation">Rotation : </label>
-        <input
-          type="range"
-          min="0"
-          max="360"
-          step="10"
-          value="0"
-          id="rotation"
-        />
-        <label for="dilatation">Dilatation : </label>
-        <input
-          type="range"
-          min="0.1"
-          max="2"
-          step="0.1"
-          value="1"
-          id="dilatation"
-        />
-        <label for="shear">X : </label>
-        <input type="range" min="0" max="800" step="10" value="0" id="shear" />
-        <label for="Size">Size : </label>
-        <input type="range" min="5" max="360" step="20" value="100" id="size" />
-        <button type="reset" id="clear" name="selected-feature" value="clear">
-          clear
-        </button>
+        <div class="content">
+          <canvas id="canvas" width="800px" height="800px"></canvas>
+          <div class="objectList">
+            <h3>Object List</h3>
+            <div id="list">
+
+            </div>
+          </div>
+        </div>    
+        <button type="reset" id="clear" name="selected-feature" value="clear">clear</button>
         <button id="edit" name="selected-feature" value="edit">edit</button>
       </div>
     </div>

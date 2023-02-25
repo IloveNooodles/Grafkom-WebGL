@@ -1,3 +1,12 @@
+let checked = [];
+let modelList = [];
+let pointList = [];
+let tempX = 0;
+let tempY = 0;
+let tempScale = 1;
+let tempShear = 0;
+let tempRotation = 0;
+
 function translation(positions, canvas) {
   //horizontal translation
   const xSlider = document.getElementById("x-translation");
@@ -21,13 +30,12 @@ function translation(positions, canvas) {
     let y = transformCoordinate(canvas, 0, parseInt(ySlider.value));
     let yTranslation = y[1] - 1;
     newPositions = positions;
-    
+
     for (let i = 0; i < newPositions.length; i++) {
       newPositions[i][1] += yTranslation - tempY;
     }
     tempY = yTranslation;
   });
-
 }
 
 function dilatation(positions) {
@@ -47,16 +55,20 @@ function dilatation(positions) {
 
 function shear(positions, canvas) {
   const shearSlider = document.getElementById("shear");
-  let temp = 0;
+  tempShear = 0;
   let newPositions = positions;
 
   shearSlider.addEventListener("input", function () {
-    let shearValue = transformCoordinate(canvas, parseInt(shearSlider.value), 0);
+    let shearValue = transformCoordinate(
+      canvas,
+      parseInt(shearSlider.value),
+      0
+    );
     let shear = shearValue[0] + 1;
-    for (let i = 0; i < newPositions.length/2; i++) {
+    for (let i = 0; i < newPositions.length / 2; i++) {
       newPositions[i][0] += shear - temp;
     }
-    temp = shear;
+    tempShear = shear;
   });
 }
 
@@ -89,16 +101,177 @@ function shear(positions, canvas) {
 //   });
 // }
 
-function changeColor(model){
+function changeColor(model) {
   const colorSlider = document.getElementById("color");
   colorSlider.addEventListener("input", function () {
     let color = getRGB(colorSlider.value);
     for (let i = 0; i < model.positions.length; i += 1) {
-      if (model.positions[i] == model.selectedVertices){
+      if (model.positions[i] == model.selectedVertices) {
         model.colors[i][0] = color.r;
         model.colors[i][1] = color.g;
         model.colors[i][2] = color.b;
       }
     }
   });
+}
+
+function editObject() {
+  console.log("checked");
+  let checkbox = document.querySelectorAll("input[type=checkbox]");
+  checked = [];
+  modelList = [];
+  pointList = [];
+  for (let i = 0; i < checkbox.length; i++) {
+    if (checkbox[i].checked) {
+      checked.push(checkbox[i].value);
+    }
+  }
+  let list = filterSelectedObject(checked);
+  modelList = list[0];
+  pointList = list[1];
+
+  const xSlider = document.getElementById("x-translation");
+  tempX = 0;
+
+  //horizontal translation
+  xSlider.addEventListener("input", function () {
+    let x = transformCoordinate(canvas, parseInt(xSlider.value), 0);
+    let xTranslation = x[0] + 1;
+    for (let p = 0; p < modelList.length; p++) {
+      let model = modelList[p];
+      for (let i = 0; i < model.positions.length; i++) {
+        model.positions[i][0] += xTranslation - tempX;
+      }
+    }
+    tempX = xTranslation;
+  });
+
+  //vertical translation
+  const ySlider = document.getElementById("y-translation");
+  tempY = 0;
+
+  ySlider.addEventListener("input", function () {
+    let y = transformCoordinate(canvas, 0, parseInt(ySlider.value));
+    let yTranslation = y[1] - 1;
+    for (let p = 0; p < modelList.length; p++) {
+      let model = modelList[p];
+      for (let i = 0; i < model.positions.length; i++) {
+        model.positions[i][1] += yTranslation - tempY;
+      }
+    }
+    tempY = yTranslation;
+  });
+
+  //dilatation
+  const scaleSlider = document.getElementById("dilation");
+  tempScale = 1;
+
+  scaleSlider.addEventListener("input", function () {
+    let scale = scaleSlider.value;
+    for (let p = 0; p < modelList.length; p++) {
+      let model = modelList[p];
+      for (let i = 0; i < model.positions.length; i += 1) {
+        model.positions[i][0] *= scale / temp;
+        model.positions[i][1] *= scale / temp;
+      }
+    }
+    tempScale = scale;
+  });
+
+  //shear
+  const shearSlider = document.getElementById("shear");
+  tempShear = 0;
+
+  shearSlider.addEventListener("input", function () {
+    let shearValue = transformCoordinate(
+      canvas,
+      parseInt(shearSlider.value),
+      0
+    );
+    let shear = shearValue[0] + 1;
+    for (let p = 0; p < modelList.length; p++) {
+      let model = modelList[p];
+      for (let i = 0; i < model.positions.length; i += 1) {
+        model.positions[i][0] +=
+          (model.positions[i][1] - 0) * (shear - tempShear);
+      }
+    }
+    tempShear = shear;
+  });
+
+  // console.log(checked)
+  // if (checked.length > 0) {
+  //   for (let p=0; p<checked.length; p++){
+  //     let model = checked[p][0];
+  //     if(model == "l"){
+  //       console.log(models.line[checked[p][1]-1])
+  //       modelList.push(models.line[checked[p][1]-1])
+  //     }
+  //   }
+  // }
+}
+
+function filterSelectedObject(array) {
+  let selectedModel = [];
+  let selectedPoint = [];
+  let modelInserted = [];
+
+  for (let i = 0; i < array.length; i++) {
+    let m = array[i][0];
+    if (array[i].length < 5) {
+      if (m == "l") {
+        selectedModel.push(models.line[array[i][1] - 1]);
+        console.log(models.line[array[i][1] - 1]);
+        modelInserted.push(array[i]);
+      } else if (m == "s") {
+        selectedModel.push(models.square[array[i][1] - 1]);
+        modelInserted.push(array[i]);
+      } else if (m == "r") {
+        selectedModel.push(models.rectangle[array[i][1] - 1]);
+        modelInserted.push(array[i]);
+      }
+    } else {
+      // let point = array[i].split("point")
+      // console.log(point)
+      // if (!modelInserted.includes(array[i])){
+      //   if (m == "l"){
+      //     selectedPoint.push(models.line[array[i][1]-1])
+      //     modelInserted.push(array[i]);
+      //   }else if(m == "s"){
+      //     selectedPoint.push(models.square[array[i][1]-1])
+      //     modelInserted.push(array[i]);
+      //   }else if(m == "r"){
+      //     selectedPoint.push(models.rectangle[array[i][1]-1])
+      //     modelInserted.push(array[i]);
+      //   }
+      // }
+    }
+  }
+  console.log(selectedModel);
+  console.log(selectedPoint);
+  return [selectedModel, selectedPoint];
+}
+
+function printModels(model, obj) {
+  console.log(model[0]);
+  objCount = obj.length;
+  pointCount = obj[objCount - 1].positions.length;
+  console.log(obj[obj.length - 1].positions);
+  let list = document.getElementById("list");
+  document.createElement("ul");
+  object = document.createElement("li");
+  object.innerHTML = `
+  <input type="checkbox" id="${model[0]}${obj.length}" name="${model[0]}${obj.length}" value="${model[0]}${obj.length}" >
+  <label for="${model[0]}${obj.length}">${model}${obj.length}</label><br>
+   `;
+  list.appendChild(object);
+  for (let i = 1; i <= pointCount; i++) {
+    let point = document.createElement("li");
+    point.innerHTML = `
+    <input type="checkbox" id="${model[0]}${obj.length}point${i}" name="${model[0]}${obj.length}point${i}" value="${model[0]}${obj.length}point${i}">
+    <label for="${model[0]}${obj.length}point${i}">point${i}</label><br>
+    `;
+
+    object.appendChild(point);
+  }
 }
