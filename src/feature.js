@@ -198,6 +198,17 @@ function editObject() {
     tempShear = shear;
   });
 
+  //add and delete polygon points
+  for (let i = 0; i < modelList.length; i ++) {
+    if (modelList[i].constructor.name == "Polygon") {
+      showPointPolyButtons();
+      isPolygon = true;
+      drawType = "polygon";
+      editablePolygonIndex = i;    
+    } else {
+      hidePointPolyButtons();
+    }
+  }
   // console.log(checked)
   // if (checked.length > 0) {
   //   for (let p=0; p<checked.length; p++){

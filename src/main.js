@@ -1,6 +1,7 @@
 /* ==== Element and event listener ==== */
 let isPolygon = false;
 let polyPoints = [];
+let editablePolygonIndex;
 const lineButton = document.getElementById("line");
 lineButton.addEventListener("click", function () {
   hideDrawPolyButtons();
@@ -35,12 +36,29 @@ startDrawPolygonButton.addEventListener("click", function () {
 
 const stopDrawPolygonButton = document.getElementById("stop-gambar-polygon");
 stopDrawPolygonButton.addEventListener("click", function () {
-  isPolygon = false;
-  drawType = "";
   models.polygon.push(new Polygon(polyPoints));
   printModels("polygon", models.polygon);
+  isPolygon = false;
+  drawType = "";
   polyPoints = [];
 });
+
+const addPointPolygonButton = document.getElementById("tambah-titik-polygon");
+addPointPolygonButton.addEventListener("click", function () {
+  let { r, g, b } = getRGB(rgb);
+  for (let i = 0; i < polyPoints.length; i += 2) {
+    models["polygon"][editablePolygonIndex].positions.push(
+      transformCoordinate(canvas, polyPoints[i], polyPoints[i + 1])
+    );
+    models["polygon"][editablePolygonIndex].colors.push([r, g, b, 1]);
+  }
+  let vertexCount = models["polygon"][editablePolygonIndex].positions.length;
+  models["polygon"][editablePolygonIndex].positions = convexHull(models["polygon"][editablePolygonIndex].positions, vertexCount);
+
+  polyPoints = [];
+})
+
+const deletePointPolygonButton = document.getElementById("hapus-titik-polygon");
 
 const editButton = document.getElementById("edit");
 editButton.addEventListener("click", function () {
@@ -383,9 +401,21 @@ renderObject(program);
 function hideDrawPolyButtons() {
   startDrawPolygonButton.hidden = true;
   stopDrawPolygonButton.hidden = true;
+  addPointPolygonButton.hidden = true;
+  deletePointPolygonButton.hidden = true;
 }
 
 function showDrawPolyButtons() {
   startDrawPolygonButton.hidden = false;
   stopDrawPolygonButton.hidden = false;
+}
+
+function hidePointPolyButtons() {
+  addPointPolygonButton.hidden = true;
+  deletePointPolygonButton.hidden = true;
+}
+
+function showPointPolyButtons() {
+  addPointPolygonButton.hidden = false;
+  deletePointPolygonButton.hidden = false;
 }

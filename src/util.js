@@ -197,6 +197,9 @@ function orientationOf3Points(pointA, pointB, pointC) {
   let val = (pointB[1] - pointA[1]) * (pointC[0] - pointB[0]) - 
             (pointB[0] - pointA[0]) * (pointC[1] - pointB[1]);
 
+  // 0 = pointA, pointB dan pointC colinear
+  // 1 = clockwise
+  // 2 = counterclockwise
   if (val == 0) {
     return 0;
   }
