@@ -38,6 +38,7 @@ stopDrawPolygonButton.addEventListener("click", function () {
   isPolygon = false;
   drawType = "";
   models.polygon.push(new Polygon(polyPoints));
+  printModels("polygon", models.polygon);
   polyPoints = [];
 });
 

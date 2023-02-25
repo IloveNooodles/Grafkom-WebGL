@@ -116,7 +116,6 @@ function changeColor(model) {
 }
 
 function editObject() {
-  console.log("checked");
   let checkbox = document.querySelectorAll("input[type=checkbox]");
   checked = [];
   modelList = [];
@@ -171,8 +170,8 @@ function editObject() {
     for (let p = 0; p < modelList.length; p++) {
       let model = modelList[p];
       for (let i = 0; i < model.positions.length; i += 1) {
-        model.positions[i][0] *= scale / temp;
-        model.positions[i][1] *= scale / temp;
+        model.positions[i][0] *= scale / tempScale;
+        model.positions[i][1] *= scale / tempScale;
       }
     }
     tempScale = scale;
@@ -228,6 +227,9 @@ function filterSelectedObject(array) {
         modelInserted.push(array[i]);
       } else if (m == "r") {
         selectedModel.push(models.rectangle[array[i][1] - 1]);
+        modelInserted.push(array[i]);
+      }else if(m == "p"){
+        selectedModel.push(models.polygon[array[i][1] - 1]);
         modelInserted.push(array[i]);
       }
     } else {
