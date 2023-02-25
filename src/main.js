@@ -62,7 +62,13 @@ const deletePointPolygonButton = document.getElementById("hapus-titik-polygon");
 
 const editButton = document.getElementById("edit");
 editButton.addEventListener("click", function () {
+  document.getElementById("x-translation").value = "0";
+  document.getElementById("y-translation").value = "0";
+  document.getElementById("dilation").value = "1";
+  document.getElementById("shear").value = "0";
+  document.getElementById("rotation").value = "0";
   drawType = "edit";
+  editObject();
 });
 
 const clearButton = document.getElementById("clear");
@@ -88,18 +94,6 @@ loadInput.addEventListener("input", function (e) {
 const scaleSlider = document.getElementById("size");
 scaleSlider.addEventListener("input", function (e) {
   size = parseInt(scaleSlider.value);
-});
-
-const undoButton = document.getElementById("undo");
-undoButton.addEventListener("click", function () {
-  document.getElementById("x-translation").value = "0";
-  document.getElementById("y-translation").value = "0";
-  document.getElementById("dilation").value = "1";
-  document.getElementById("shear").value = "0";
-  document.getElementById("rotation").value = "0";
-  editObject();
-
-
 });
 
 const canvas = document.getElementById("canvas");
@@ -297,9 +291,6 @@ function draw(model, x, y) {
   } else if (model === "polygon") {
     polyPoints.push(x, y);
   } else {
-    // dapet objectnya
-    // edit mode
-    // scale, ngubarh warna dll
     selectObject(x, y);
     return
   }

@@ -69,9 +69,6 @@ class Line extends Shape {
 
   render(program) {
     this.setCentroid();
-    // console.log(this.positions);
-    // console.log(this.centroid);
-
     renderColor(program, flatten(this.colors), 4);
     renderVertex(program, flatten(this.positions), 2);
     for (let i = 0; i < this.positions.length; i += 2) {
@@ -107,8 +104,6 @@ class Square extends Shape {
 
   render(program) {
     this.setCentroid();
-    // console.log(this.positions);
-    // console.log(this.positions.length);
     let arrSize = this.positions.length;
 
     renderColor(program, flatten(this.colors), 4);
@@ -132,7 +127,6 @@ class Rectangle extends Shape {
     this.setCentroid();
 
     let recSize = this.positions.length;
-    // console.log(this.positions);
     renderColor(program, flatten(this.colors), 4);
     renderVertex(program, flatten(this.positions), 2);
     for (let i = 0; i < recSize; i += 4) {
@@ -171,10 +165,6 @@ class Polygon extends Shape {
   }
 
   render(program) {
-    // console.log(this.positions);
-    // let polyCentroid = centroid(this.positions);
-    // console.log(polyCentroid[0]);
-    // console.log(polyCentroid[1]);
     this.setCentroid();
     let vertexCount = this.positions.length;
     this.positions = convexHull(this.positions, vertexCount);
@@ -182,13 +172,6 @@ class Polygon extends Shape {
 
     renderColor(program, flatten(this.colors), 4);
     renderVertex(program, flatten(this.positions), 2);
-    // console.log(vertexCount);
     gl.drawArrays(gl.TRIANGLE_FAN, 0, vertexCount);
-    // for (let i = 0; i < vertexCount - 2; i += 1) {
-    //   console.log("berapa kali");
-    //   // console.log("1");
-    //   gl.drawArrays(gl.TRIANGLE_FAN, i, vertexCount);
-    //   // console.log("1");
-    // }
   }
 }

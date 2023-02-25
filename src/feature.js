@@ -7,73 +7,6 @@ let tempScale = 1;
 let tempShear = 0;
 let tempRotation = 0;
 
-function translation(positions, canvas) {
-  //horizontal translation
-  const xSlider = document.getElementById("x-translation");
-  let tempX = 0;
-  let newPositions = positions;
-
-  xSlider.addEventListener("input", function () {
-    let x = transformCoordinate(canvas, parseInt(xSlider.value), 0);
-    let xTranslation = x[0] + 1;
-    for (let i = 0; i < newPositions.length; i++) {
-      newPositions[i][0] += xTranslation - tempX;
-    }
-    tempX = xTranslation;
-  });
-
-  //vertical translation
-  const ySlider = document.getElementById("y-translation");
-  let tempY = 0;
-
-  ySlider.addEventListener("input", function () {
-    let y = transformCoordinate(canvas, 0, parseInt(ySlider.value));
-    let yTranslation = y[1] - 1;
-    newPositions = positions;
-
-    for (let i = 0; i < newPositions.length; i++) {
-      newPositions[i][1] += yTranslation - tempY;
-    }
-    tempY = yTranslation;
-  });
-}
-
-function dilatation(positions) {
-  const scaleSlider = document.getElementById("dilatation");
-  let newPositions = positions;
-  let temp = 1;
-
-  scaleSlider.addEventListener("input", function () {
-    let scale = scaleSlider.value;
-    for (let i = 0; i < newPositions.length; i += 1) {
-      newPositions[i][0] *= scale / temp;
-      newPositions[i][1] *= scale / temp;
-    }
-    temp = scale;
-  });
-}
-
-function shear(positions, canvas) {
-  const shearSlider = document.getElementById("shear");
-  tempShear = 0;
-  let newPositions = positions;
-
-  shearSlider.addEventListener("input", function () {
-    let shearValue = transformCoordinate(
-      canvas,
-      parseInt(shearSlider.value),
-      0
-    );
-    let shear = shearValue[0] + 1;
-    for (let i = 0; i < newPositions.length / 2; i++) {
-      newPositions[i][0] += shear - temp;
-    }
-    tempShear = shear;
-  });
-
-  
-}
-
 // function rotation (type, positions, gl, program){
 //   const rotationSlider = document.getElementById("rotation");
 //   let newPositions = positions;
@@ -102,20 +35,6 @@ function shear(positions, canvas) {
 //     }
 //   });
 // }
-
-function changeColor(model) {
-  const colorSlider = document.getElementById("color");
-  colorSlider.addEventListener("input", function () {
-    let color = getRGB(colorSlider.value);
-    for (let i = 0; i < model.positions.length; i += 1) {
-      if (model.positions[i] == model.selectedVertices) {
-        model.colors[i][0] = color.r;
-        model.colors[i][1] = color.g;
-        model.colors[i][2] = color.b;
-      }
-    }
-  });
-}
 
 function editObject() {
   let checkbox = document.querySelectorAll("input[type=checkbox]");
@@ -224,6 +143,7 @@ function editObject() {
     }
   });
 
+  //add and delete polygon points
   for (let i = 0; i < modelList.length; i++) {
     if (modelList[i].constructor.name == "Polygon") {
       showPointPolyButtons();
