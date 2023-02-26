@@ -8,6 +8,7 @@ let editablePolygonPointIndex = [];
 const lineButton = document.getElementById("line");
 lineButton.addEventListener("click", function () {
   if (!isEditing) {
+    alert("You can start drawing line");
     hideDrawPolyButtons();
     isPolygon = false;
     drawType = "line";
@@ -19,6 +20,7 @@ lineButton.addEventListener("click", function () {
 const squareButton = document.getElementById("square");
 squareButton.addEventListener("click", function () {
   if (!isEditing) {
+    alert("You can start drawing square");
     hideDrawPolyButtons();
     isPolygon = false;
     drawType = "square";
@@ -30,6 +32,7 @@ squareButton.addEventListener("click", function () {
 const rectangleButton = document.getElementById("rectangle");
 rectangleButton.addEventListener("click", function () {
   if (!isEditing) {
+    alert("You can start drawing rectangle");
     hideDrawPolyButtons();
     isPolygon = false;
     drawType = "rectangle";
@@ -41,6 +44,7 @@ rectangleButton.addEventListener("click", function () {
 const polygonButton = document.getElementById("polygon");
 polygonButton.addEventListener("click", function () {
   if (!isEditing) {
+    alert("You can start drawing polygon by clicking start draw");
     isPolygon = true;
     showDrawPolyButtons();
   } else {
@@ -52,6 +56,7 @@ const startDrawPolygonButton = document.getElementById("mulai-gambar-polygon");
 startDrawPolygonButton.addEventListener("click", function () {
   if (!isEditing) {
     drawType = "polygon";
+    alert("You can start drawing polygon");
   } else {
     alert("Click finish button first!");
   }
