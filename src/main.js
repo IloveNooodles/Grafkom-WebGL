@@ -55,28 +55,34 @@ addPointPolygonButton.addEventListener("click", function () {
     //console.log(editablePolygon.colors);
   }
   let vertexCount = editablePolygon.positions.length;
-  editablePolygon.positions = convexHull(editablePolygon.positions, vertexCount);
+  editablePolygon.positions = convexHull(
+    editablePolygon.positions,
+    vertexCount
+  );
 
   polyPoints = [];
   printModels("polygon", models.polygon);
-})
+});
 
 const deletePointPolygonButton = document.getElementById("hapus-titik-polygon");
-deletePointPolygonButton.addEventListener("click", function() {
+deletePointPolygonButton.addEventListener("click", function () {
   let deletePointCount = editablePolygonPointIndex.length;
-  for (let i = 0; i < deletePointCount; i ++) {
+  for (let i = 0; i < deletePointCount; i++) {
     //console.log("jumlah loop");
     editablePolygon.positions.splice(editablePolygonPointIndex[i], 1);
     editablePolygon.colors.splice(editablePolygonPointIndex[i], 1);
-    for (let j = i + 1; j < editablePolygonPointIndex.length; j ++) {
+    for (let j = i + 1; j < editablePolygonPointIndex.length; j++) {
       editablePolygonPointIndex[j] -= 1;
     }
   }
 
   let vertexCount = editablePolygon.positions.length;
-  editablePolygon.positions = convexHull(editablePolygon.positions, vertexCount);
+  editablePolygon.positions = convexHull(
+    editablePolygon.positions,
+    vertexCount
+  );
   printModels("polygon", models.polygon);
-})
+});
 
 const editButton = document.getElementById("edit");
 editButton.addEventListener("click", function () {
@@ -131,6 +137,11 @@ canvas.addEventListener("mousedown", function (e) {
 
 canvas.addEventListener("mouseup", function (e) {
   isDown = false;
+});
+
+const colorInput = document.getElementById("color");
+colorInput.addEventListener("input", function (e) {
+  rgb = e.target.value;
 });
 
 /* ==== Global Object ==== */
@@ -309,7 +320,7 @@ function draw(model, x, y) {
   } else if (model === "polygon") {
     polyPoints.push(x, y);
   } else {
-    return
+    return;
   }
 }
 

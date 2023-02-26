@@ -56,7 +56,9 @@
             <img width="20" height="20" src="./assets/save.png" alt="save" />
           </button>
           <input type="file" id="load" name="selected-feature" value="load" />
-          <button type="reset" id="clear" name="selected-feature" value="clear">Clear</button>
+          <button type="reset" id="clear" name="selected-feature" value="clear">
+            Clear
+          </button>
           <button id="edit" name="selected-feature" value="edit">Edit</button>
           <br />
           <label for="color">Color</label>
@@ -119,7 +121,14 @@
           <br />
           <label for="Size">Size : </label>
           <br />
-          <input type="range" min="5" max="360" step="20" value="100" id="size" />
+          <input
+            type="range"
+            min="5"
+            max="360"
+            step="20"
+            value="100"
+            id="size"
+          />
         </form>
       </div>
       <div class="canvas">
@@ -127,11 +136,9 @@
           <canvas id="canvas" width="800px" height="800px"></canvas>
           <div class="objectList">
             <h3>Object List</h3>
-            <div id="list">
-
-            </div>
+            <div id="list"></div>
           </div>
-        </div>    
+        </div>
       </div>
     </div>
     <script src="util.js"></script>
