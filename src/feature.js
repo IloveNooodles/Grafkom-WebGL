@@ -135,7 +135,43 @@ function editObject() {
           model.positions[squarePointIndex - 2][0] += xTranslation - tempX;
         }
       } else if (model.constructor.name == "Rectangle") {
-        return;
+        let widthHeightRatio = (model.positions[0][0] - model.positions[1][0]) / (model.positions[0][1] - model.positions[2][1]);
+        console.log(model.positions[0][0] - model.positions[1][0]);
+        console.log(model.positions[0][1] - model.positions[2][1]);
+        console.log(widthHeightRatio);
+        if (widthHeightRatio < 0) {
+          widthHeightRatio *= -1;
+        }
+        let widthTranslation = xTranslation - tempX;
+        let heightTranslation = widthTranslation / widthHeightRatio;
+
+        let squarePointIndex = pointIndex[p] - 1;
+        if (squarePointIndex == 0) {
+          model.positions[squarePointIndex][0] += widthTranslation;
+          model.positions[squarePointIndex][1] -= heightTranslation;
+
+          model.positions[squarePointIndex + 1][1] -= heightTranslation;
+          model.positions[squarePointIndex + 2][0] += widthTranslation;
+        } else if (squarePointIndex == 1) {
+          model.positions[squarePointIndex][0] += widthTranslation;
+          model.positions[squarePointIndex][1] += heightTranslation;
+
+          model.positions[squarePointIndex + 2][0] += widthTranslation;
+          model.positions[squarePointIndex - 1][1] += heightTranslation;
+        } else if (squarePointIndex == 2) {
+          model.positions[squarePointIndex][0] += widthTranslation;
+          model.positions[squarePointIndex][1] += heightTranslation;
+
+          model.positions[squarePointIndex - 2][0] += widthTranslation;
+          model.positions[squarePointIndex + 1][1] += heightTranslation;
+        } else {
+          //squarePointIndex == 3
+          model.positions[squarePointIndex][0] += widthTranslation;
+          model.positions[squarePointIndex][1] -= heightTranslation;
+
+          model.positions[squarePointIndex - 1][1] -= heightTranslation;
+          model.positions[squarePointIndex - 2][0] += widthTranslation;
+        }
       } else {
         //line and polygon
         model.positions[pointIndex[p] - 1][0] += xTranslation - tempX;
@@ -170,17 +206,17 @@ function editObject() {
           model.positions[squarePointIndex + 1][1] -= yTranslation - tempY;
           model.positions[squarePointIndex + 2][0] += yTranslation - tempY;
         } else if (squarePointIndex == 1) {
-          model.positions[squarePointIndex][0] += yTranslation - tempY;
-          model.positions[squarePointIndex][1] += yTranslation - tempY;
+          model.positions[squarePointIndex][0] -= yTranslation - tempY;
+          model.positions[squarePointIndex][1] -= yTranslation - tempY;
 
-          model.positions[squarePointIndex + 2][0] += yTranslation - tempY;
-          model.positions[squarePointIndex - 1][1] += yTranslation - tempY;
+          model.positions[squarePointIndex + 2][0] -= yTranslation - tempY;
+          model.positions[squarePointIndex - 1][1] -= yTranslation - tempY;
         } else if (squarePointIndex == 2) {
-          model.positions[squarePointIndex][0] += yTranslation - tempY;
-          model.positions[squarePointIndex][1] += yTranslation - tempY;
+          model.positions[squarePointIndex][0] -= yTranslation - tempY;
+          model.positions[squarePointIndex][1] -= yTranslation - tempY;
 
-          model.positions[squarePointIndex - 2][0] += yTranslation - tempY;
-          model.positions[squarePointIndex + 1][1] += yTranslation - tempY;
+          model.positions[squarePointIndex - 2][0] -= yTranslation - tempY;
+          model.positions[squarePointIndex + 1][1] -= yTranslation - tempY;
         } else {
           //squarePointIndex == 3
           model.positions[squarePointIndex][0] += yTranslation - tempY;
@@ -190,7 +226,40 @@ function editObject() {
           model.positions[squarePointIndex - 2][0] += yTranslation - tempY;
         }
       } else if (model.constructor.name == "Rectangle") {
-        return;
+        let widthHeightRatio = (model.positions[0][0] - model.positions[1][0]) / (model.positions[0][1] - model.positions[2][1]);
+        if (widthHeightRatio < 0) {
+          widthHeightRatio *= -1;
+        }
+        let widthTranslation = yTranslation - tempY;
+        let heightTranslation = widthTranslation / widthHeightRatio;
+
+        let squarePointIndex = pointIndex[p] - 1;
+        if (squarePointIndex == 0) {
+          model.positions[squarePointIndex][0] += widthTranslation;
+          model.positions[squarePointIndex][1] -= heightTranslation;
+
+          model.positions[squarePointIndex + 1][1] -= heightTranslation;
+          model.positions[squarePointIndex + 2][0] += widthTranslation;
+        } else if (squarePointIndex == 1) {
+          model.positions[squarePointIndex][0] -= widthTranslation;
+          model.positions[squarePointIndex][1] -= heightTranslation;
+
+          model.positions[squarePointIndex + 2][0] -= widthTranslation;
+          model.positions[squarePointIndex - 1][1] -= heightTranslation;
+        } else if (squarePointIndex == 2) {
+          model.positions[squarePointIndex][0] -= widthTranslation;
+          model.positions[squarePointIndex][1] -= heightTranslation;
+
+          model.positions[squarePointIndex - 2][0] -= widthTranslation;
+          model.positions[squarePointIndex + 1][1] -= heightTranslation;
+        } else {
+          //squarePointIndex == 3
+          model.positions[squarePointIndex][0] += widthTranslation;
+          model.positions[squarePointIndex][1] -= heightTranslation;
+
+          model.positions[squarePointIndex - 1][1] -= heightTranslation;
+          model.positions[squarePointIndex - 2][0] += widthTranslation;
+        }
       } else {
         //line and polygon
         model.positions[pointIndex[p] - 1][1] += yTranslation - tempY;
