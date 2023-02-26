@@ -37,11 +37,13 @@ startDrawPolygonButton.addEventListener("click", function () {
 
 const stopDrawPolygonButton = document.getElementById("stop-gambar-polygon");
 stopDrawPolygonButton.addEventListener("click", function () {
-  models.polygon.push(new Polygon(polyPoints));
+  if (polyPoints.length > 2) {
+    models.polygon.push(new Polygon(polyPoints));
   printModels("polygon", models.polygon);
   isPolygon = false;
   drawType = "";
   polyPoints = [];
+  }
 });
 
 const addPointPolygonButton = document.getElementById("tambah-titik-polygon");
