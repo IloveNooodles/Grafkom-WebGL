@@ -120,6 +120,16 @@ scaleSlider.addEventListener("input", function (e) {
   size = parseInt(scaleSlider.value);
 });
 
+const helpButton = document.getElementById("help");
+helpButton.addEventListener("click", function () {
+  document.getElementById("modal").style.display = "block";
+});
+
+const closeButton = document.getElementsByClassName("close");
+closeButton[0].addEventListener("click", function () {
+  document.getElementById("modal").style.display = "none";
+});
+
 const canvas = document.getElementById("canvas");
 canvas.addEventListener("mousemove", function (e) {
   if (isDown) {

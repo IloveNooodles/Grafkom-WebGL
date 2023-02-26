@@ -5,6 +5,7 @@ let tempX = 0;
 let tempY = 0;
 let tempScale = 1;
 let tempShear = 0;
+let tempShearY = 0;
 let tempRotation = 0;
 
 // function rotation (type, positions, gl, program){
@@ -285,7 +286,36 @@ function editObject() {
     tempScale = scale;
   });
 
-  //shear
+  //rotation
+  const rotationSlider = document.getElementById("rotation");
+  tempRotation = 0;
+
+  rotationSlider.addEventListener("input", function () {
+    console.log(rotationSlider.value)
+    let rotation = rotationSlider.value * Math.PI / 180;
+    for (let p = 0; p < modelList.length; p++) {
+      let model = modelList[p];
+      let center = centroid(model.positions);
+      //rotation on coordinate
+      for (let i = 0; i < model.positions.length; i += 1) {
+        model.positions[i][0] =
+          (model.positions[i][0] - center[0]) *
+            Math.cos(rotation - tempRotation) -
+          (model.positions[i][1] - center[1]) *
+            Math.sin(rotation - tempRotation) +
+          center[0];
+        model.positions[i][1] =
+          (model.positions[i][0] - center[0]) *
+            Math.sin(rotation - tempRotation) +
+          (model.positions[i][1] - center[1]) *
+            Math.cos(rotation - tempRotation) +
+          center[1];
+      }
+    }
+    tempRotation = rotation;
+  });
+
+  //shearX
   const shearSlider = document.getElementById("shear");
   tempShear = 0;
 
@@ -304,6 +334,27 @@ function editObject() {
       }
     }
     tempShear = shear;
+  });
+
+  //shearY
+  const shearSliderY = document.getElementById("shearY");
+  tempShearY = 0;
+  
+  shearSliderY.addEventListener("input", function () {
+    let shearValue = transformCoordinate(
+      canvas,
+      0,
+      parseInt(shearSliderY.value)
+    );
+    let shear = shearValue[1] - 1;
+    for (let p = 0; p < modelList.length; p++) {
+      let model = modelList[p];
+      for (let i = 0; i < model.positions.length; i += 1) {
+        model.positions[i][1] +=
+          (model.positions[i][0] - 0) * (shear - tempShearY);
+      }
+    }
+    tempShearY = shear;
   });
 
   //change color
@@ -411,21 +462,37 @@ function printModels(model, obj) {
   console.log(model[0]);
   objCount = obj.length;
   pointCount = obj[objCount - 1].positions.length;
-  console.log(obj[obj.length - 1].positions);
+  console.log(obj[objCount - 1].positions);
   let list = document.getElementById("list");
-  object = document.createElement("li");
+  object = document.createElement("div");
   object.innerHTML = `
-  <input type="checkbox" id="${model[0]}${obj.length}" name="${model[0]}${obj.length}" value="${model[0]}${obj.length}" >
-  <label for="${model[0]}${obj.length}">${model}${obj.length}</label><br>
+  <input type="checkbox" id="${model[0]}${objCount}" name="${model[0]}${objCount}" value="${model[0]}${objCount}" >
+  <label for="${model[0]}${objCount}">${model}${objCount}</label><br>
    `;
   list.appendChild(object);
   for (let i = 1; i <= pointCount; i++) {
     let point = document.createElement("li");
     point.innerHTML = `
-    <input type="checkbox" id="${model[0]}${obj.length}point${i}" name="${model[0]}${obj.length}point${i}" value="${model[0]}${obj.length}point${i}">
-    <label for="${model[0]}${obj.length}point${i}">point${i}</label><br>
+    <input type="checkbox" id="${model[0]}${objCount}point${i}" name="${model[0]}${objCount}point" value="${model[0]}${objCount}point${i}">
+    <label for="${model[0]}${objCount}point${i}">point${i}</label><br>
     `;
 
     object.appendChild(point);
   }
+
+  // set the checkbox to be checked
+  let shapeSelection = document.getElementById(`${model[0]}${obj.length}`);
+  let objectCount = obj.length;
+  shapeSelection.addEventListener("change", function () {
+    if (shapeSelection.checked) {
+      document.querySelectorAll(`input[name="${model[0]}${objectCount}point"]`).forEach((item) => {
+        item.checked = true;
+      });
+    } else {
+      document.querySelectorAll(`input[name="${model[0]}${objectCount}point"]`).forEach((item) => {
+        item.checked = false;
+      });
+    }
+  });
 }
+

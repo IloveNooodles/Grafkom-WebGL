@@ -47,9 +47,7 @@ function transformCoordinate(canvas, x, y) {
 function centroid(matrix) {
   let x = 0;
   let y = 0;
-  // console.log(matrix);
   let vertexCount = matrix.length;
-  // console.log(vertexCount);
   for (i = 0; i < vertexCount; i++) {
     x += matrix[i][0];
     y += matrix[i][1];

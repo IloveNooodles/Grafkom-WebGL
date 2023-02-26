@@ -10,6 +10,11 @@
   <body>
     <div class="header">
       <h2>2D Web Based CAD</h2>
+      <div class="help">
+        <button id="help" class="help-button">
+          <img width="25" height="25" src="./assets/help.png" alt="help" />
+        </button>
+      </div>
     </div>
     <div class="container">
       <div class="sidebar">
@@ -119,6 +124,17 @@
             id="shear"
           />
           <br />
+          <label for="shearY">Shear Y : </label>
+          <br />
+          <input
+            type="range"
+            min="0"
+            max="800"
+            step="10"
+            value="0"
+            id="shearY"
+          />
+          <br />
           <label for="Size">Size : </label>
           <br />
           <input
@@ -132,6 +148,83 @@
         </form>
       </div>
       <div class="canvas">
+        <!-- modal -->
+        <div id="modal"class="modal">
+          <div class="modal-content" >
+            <span class="close">&times;</span>
+            <h4>Help</h4>
+            <div class="modal-item">
+              <p>
+                <b>Model</b>
+                <p class="titleHelp">
+                  Garis
+                </p>
+                <p>
+                  1. Klik tombol garis untuk memulai menggambar garis<br />
+                  2. Klik pada canvas kemudian drag untuk menggambar<br />
+                </p>
+                <p class="titleHelp">
+                  Persegi
+                </p>
+                  1. Klik tombol persegi untuk memulai menggambar persegi<br />
+                  2. Gerakkan slider size untuk mengatur ukuran persegi<br />
+                  3. Klik pada canvas untuk menggambar persegi<br />
+                </p>
+                <p class="titleHelp">
+                  Persegi Panjang
+                </p>
+                <p>
+                  1. Klik tombol persegi panjang untuk memulai menggambar persegi panjang<br />
+                  2. Klik pada canvas kemudian drag untuk menggambar<br />
+                </p>
+                <p class="titleHelp">
+                  Polygon
+                </p>
+                <p>
+                  1. Klik tombol polygon<br />
+                  2. Klik tombol draw polygon untuk memulai menggambar polygon<br />
+                  3. Klik pada canvas untuk menambah titik polygon<br />
+                  4. Klik tombol stop drawing polygon untuk mengakhiri menggambar polygon<br />
+                  5. Klik tombol add polygon point untuk menambah titik polygon<br />
+                  6. Klik tombol delete polygon point untuk menghapus titik polygon<br />
+                </p>
+              </p>
+              <p>
+                <b>Fitur</b>
+                <p class="titleHelp">
+                  Edit
+                </p>
+                  1. Pilih objek yang ingin diedit<br />
+                  2. Klik tombol edit<br />
+                  3. Pilih fitur yang ingin diedit<br />
+                    <li><b>Color</b> : Pilih warna yang diinginkan<br /></li>
+                    <li><b>Translasi X</b> : Gerakkan slider untuk menggeser objek ke arah sumbu x<br /></li>
+                    <li><b>Translasi Y</b> : Gerakkan slider untuk menggeser objek ke arah sumbu y<br /></li>
+                    <li><b>Rotasi</b> : Gerakkan slider untuk memutar objek<br /></li>
+                    <li><b>Dilatasi</b> : Gerakkan slider untuk memperbesar objek<br /></li>
+                    <li><b>Shear X</b> : Gerakkan slider untuk menggeser objek ke arah sumbu x<br /></li>
+                    <li><b>Size</b> : Gerakkan slider untuk mengubah ukuran objek<br /></li>
+                </p>
+                <p class="titleHelp">
+                  Save
+                </p>
+                <p>
+                  1. Klik tombol save<br />
+                  2. Pilih lokasi penyimpanan<br />
+                  3. Klik save<br />
+                </p>
+                <p class="titleHelp">
+                  Load
+                </p>
+                <p>
+                  1. Klik tombol load<br />
+                  2. Pilih file yang ingin dimuat<br />
+                  3. Klik open<br />
+                </p>
+              </p>    
+            </div>
+          </div>
+        </div>
         <div class="content">
           <canvas id="canvas" width="800px" height="800px"></canvas>
           <div class="objectList">

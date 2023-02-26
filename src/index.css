@@ -73,3 +73,58 @@ p {
   padding-left: 10px;
   padding-top: 10px;
 }
+
+.modal{
+  display: none;
+  position:fixed;
+  top: 50%;
+  left: 50%;
+  z-index: 101;
+  transform: translate(-50%, -50%);
+  width: 80%;
+  height: 80%;
+  justify-content: center;
+  overflow-y: auto;
+  background-color: #fefefe;
+  border: 1px solid #888;
+  padding : 20px; /* Black w/ opacity */
+}
+
+.header{
+  display: flex;
+  flex-direction: row;
+  justify-content: space-between;
+  padding-left: 10px;
+  padding-right:10px;
+  align-items: center;
+}
+
+.help-button{
+  background-color: #f29c5f;
+  color: #000;
+  border: none;
+  
+}
+
+/* Modal Content */
+/* .modal-content {
+  background-color: #fefefe;
+  border: 1px solid #888;
+  padding : 20px;
+  
+} */
+
+/* The Close Button */
+.close {
+  color: #aaaaaa;
+  float: right;
+  font-size: 28px;
+  font-weight: bold;
+}
+
+.close:hover,
+.close:focus {
+  color: #000;
+  text-decoration: none;
+  cursor: pointer;
+}
