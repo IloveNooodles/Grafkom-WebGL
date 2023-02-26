@@ -39,6 +39,20 @@ let tempRotation = 0;
 function editObject() {
   hidePointPolyButtons();
   editablePolygonPointIndex = []
+  //change back color of all point to black
+  let keys = Object.keys(models);
+  for (let key of keys) {
+    if (models[key].length !== 0) {
+      for (let model of models[key]) {
+        for(let i = 0; i < model.colors.length; i ++) {
+          model.colors[i][0] = 0;
+          model.colors[i][1] = 0;
+          model.colors[i][2] = 0;
+        }
+      }
+    }
+  }
+
   let checkbox = document.querySelectorAll("input[type=checkbox]");
   checked = [];
   modelList = [];
@@ -59,6 +73,26 @@ function editObject() {
   const xSlider = document.getElementById("x-translation");
   tempX = 0;
 
+  console.log(modelList);
+  //change color of selected shape to white
+  for (let p = 0; p < modelList.length; p++) {
+    let model = modelList[p];
+    console.log(model);
+    for (let i = 0; i < model.colors.length; i ++) {
+      model.colors[i][0] = 1;
+      model.colors[i][1] = 1;
+      model.colors[i][2] = 1;
+    }
+  }
+
+  //change color of selected point to white
+  for (let p = 0; p < pointList.length; p ++) {
+    let model = pointList[p];
+    model.colors[pointIndex[p]-1][0] = 1;
+    model.colors[pointIndex[p]-1][1] = 1;
+    model.colors[pointIndex[p]-1][2] = 1;
+  }
+
   //horizontal translation
   xSlider.addEventListener("input", function () {
     let x = transformCoordinate(canvas, parseInt(xSlider.value), 0);
@@ -72,10 +106,36 @@ function editObject() {
 
     for (let p = 0; p < pointList.length; p++) {
       let model = pointList[p];
-      if ((model.constructor.name == "Square") || (model.constructor.name == "Rectangle")) {
-        for (let i = 0; i < model.positions.length; i++) {
-          model.positions[i][0] += xTranslation - tempX;
+      if (model.constructor.name == "Square") {
+        let squarePointIndex = pointIndex[p] - 1;
+        if (squarePointIndex == 0) {
+          model.positions[squarePointIndex][0] += xTranslation - tempX;
+          model.positions[squarePointIndex][1] -= xTranslation - tempX;
+
+          model.positions[squarePointIndex + 1][1] -= xTranslation - tempX;
+          model.positions[squarePointIndex + 2][0] += xTranslation - tempX;
+        } else if (squarePointIndex == 1) {
+          model.positions[squarePointIndex][0] += xTranslation - tempX;
+          model.positions[squarePointIndex][1] += xTranslation - tempX;
+
+          model.positions[squarePointIndex + 2][0] += xTranslation - tempX;
+          model.positions[squarePointIndex - 1][1] += xTranslation - tempX;
+        } else if (squarePointIndex == 2) {
+          model.positions[squarePointIndex][0] += xTranslation - tempX;
+          model.positions[squarePointIndex][1] += xTranslation - tempX;
+
+          model.positions[squarePointIndex - 2][0] += xTranslation - tempX;
+          model.positions[squarePointIndex + 1][1] += xTranslation - tempX;
+        } else {
+          //squarePointIndex == 3
+          model.positions[squarePointIndex][0] += xTranslation - tempX;
+          model.positions[squarePointIndex][1] -= xTranslation - tempX;
+
+          model.positions[squarePointIndex - 1][1] -= xTranslation - tempX;
+          model.positions[squarePointIndex - 2][0] += xTranslation - tempX;
         }
+      } else if (model.constructor.name == "Rectangle") {
+        return;
       } else {
         //line and polygon
         model.positions[pointIndex[p] - 1][0] += xTranslation - tempX;
@@ -101,10 +161,36 @@ function editObject() {
 
     for (let p = 0; p < pointList.length; p++) {
       let model = pointList[p];
-      if ((model.constructor.name == "Square") || (model.constructor.name == "Rectangle")) {
-        for (let i = 0; i < model.positions.length; i++) {
-          model.positions[i][1] += yTranslation - tempY;
+      if (model.constructor.name == "Square") {
+        let squarePointIndex = pointIndex[p] - 1;
+        if (squarePointIndex == 0) {
+          model.positions[squarePointIndex][0] += yTranslation - tempY;
+          model.positions[squarePointIndex][1] -= yTranslation - tempY;
+
+          model.positions[squarePointIndex + 1][1] -= yTranslation - tempY;
+          model.positions[squarePointIndex + 2][0] += yTranslation - tempY;
+        } else if (squarePointIndex == 1) {
+          model.positions[squarePointIndex][0] += yTranslation - tempY;
+          model.positions[squarePointIndex][1] += yTranslation - tempY;
+
+          model.positions[squarePointIndex + 2][0] += yTranslation - tempY;
+          model.positions[squarePointIndex - 1][1] += yTranslation - tempY;
+        } else if (squarePointIndex == 2) {
+          model.positions[squarePointIndex][0] += yTranslation - tempY;
+          model.positions[squarePointIndex][1] += yTranslation - tempY;
+
+          model.positions[squarePointIndex - 2][0] += yTranslation - tempY;
+          model.positions[squarePointIndex + 1][1] += yTranslation - tempY;
+        } else {
+          //squarePointIndex == 3
+          model.positions[squarePointIndex][0] += yTranslation - tempY;
+          model.positions[squarePointIndex][1] -= yTranslation - tempY;
+
+          model.positions[squarePointIndex - 1][1] -= yTranslation - tempY;
+          model.positions[squarePointIndex - 2][0] += yTranslation - tempY;
         }
+      } else if (model.constructor.name == "Rectangle") {
+        return;
       } else {
         //line and polygon
         model.positions[pointIndex[p] - 1][1] += yTranslation - tempY;
@@ -190,10 +276,12 @@ function editObject() {
       showPointPolyButtons();
       editablePolygon = pointList[i];
       editablePolygonPointIndex.push(pointIndex[i] - 1);
-
-      editablePolygon.colors[editablePolygonPointIndex] = [1, 1, 1 ,1];
       console.log(editablePolygonPointIndex);
     }
+  }
+
+  for (let i = 0; i < editablePolygonPointIndex.length; i ++) {
+    editablePolygon.colors[editablePolygonPointIndex[i]] = [1, 1, 1 ,1];
   }
 
   

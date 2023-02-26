@@ -52,22 +52,30 @@ addPointPolygonButton.addEventListener("click", function () {
       transformCoordinate(canvas, polyPoints[i], polyPoints[i + 1])
     );
     editablePolygon.colors.push([r, g, b, 1]);
+    //console.log(editablePolygon.colors);
   }
   let vertexCount = editablePolygon.positions.length;
   editablePolygon.positions = convexHull(editablePolygon.positions, vertexCount);
 
   polyPoints = [];
-  // printModels("polygon", models.polygon);
+  printModels("polygon", models.polygon);
 })
 
 const deletePointPolygonButton = document.getElementById("hapus-titik-polygon");
 deletePointPolygonButton.addEventListener("click", function() {
-  console.log(editablePolygonPointIndex);
-  for (let i = 0; i < editablePolygonPointIndex.length; i ++) {
-    editablePolygon.positions.splice(editablePolygonPointIndex[i], 1)
+  let deletePointCount = editablePolygonPointIndex.length;
+  for (let i = 0; i < deletePointCount; i ++) {
+    //console.log("jumlah loop");
+    editablePolygon.positions.splice(editablePolygonPointIndex[i], 1);
+    editablePolygon.colors.splice(editablePolygonPointIndex[i], 1);
+    for (let j = i + 1; j < editablePolygonPointIndex.length; j ++) {
+      editablePolygonPointIndex[j] -= 1;
+    }
   }
+
   let vertexCount = editablePolygon.positions.length;
   editablePolygon.positions = convexHull(editablePolygon.positions, vertexCount);
+  printModels("polygon", models.polygon);
 })
 
 const editButton = document.getElementById("edit");
@@ -301,7 +309,6 @@ function draw(model, x, y) {
   } else if (model === "polygon") {
     polyPoints.push(x, y);
   } else {
-    selectObject(x, y);
     return
   }
 }
