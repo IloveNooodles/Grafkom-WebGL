@@ -74,7 +74,6 @@ stopDrawPolygonButton.addEventListener("click", function () {
 const addPointPolygonButton = document.getElementById("tambah-titik-polygon");
 addPointPolygonButton.addEventListener("click", function () {
   //let { r, g, b } = getRGB(rgb);
-  if (!isEditing) {
     for (let i = 0; i < polyPoints.length; i += 2) {
       editablePolygon.positions.push(
         transformCoordinate(canvas, polyPoints[i], polyPoints[i + 1])
@@ -89,15 +88,10 @@ addPointPolygonButton.addEventListener("click", function () {
     );
 
     polyPoints = [];
-    printModels("polygon", models.polygon);
-  } else {
-    alert("Click finish button first!");
-  }
 });
 
 const deletePointPolygonButton = document.getElementById("hapus-titik-polygon");
 deletePointPolygonButton.addEventListener("click", function () {
-  if (!isEditing) {
     let deletePointCount = editablePolygonPointIndex.length;
     for (let i = 0; i < deletePointCount; i++) {
       //console.log("jumlah loop");
@@ -113,10 +107,6 @@ deletePointPolygonButton.addEventListener("click", function () {
       editablePolygon.positions,
       vertexCount
     );
-    printModels("polygon", models.polygon);
-  } else {
-    alert("Click finish button first!");
-  }
 });
 
 const editButton = document.getElementById("edit");
@@ -414,19 +404,23 @@ function loadModel(loadedModel) {
         let obj = new Line(0, 0);
         obj.copy(item);
         models[key].push(obj);
+        printModels("line", models.line);
       } else if (key === "square") {
         let obj = new Square(0, 0);
         obj.copy(item);
         models[key].push(obj);
+        printModels("square", models.square);
       } else if (key === "rectangle") {
         let obj = new Square(0, 0);
         obj.copy(item);
         models[key].push(obj);
+        printModels("rectangle", models.rectangle);
       } else if (key === "polygon") {
         let obj = new Polygon(polyPoints);
         obj.copy(item);
         console.log(item, obj);
         models[key].push(obj);
+        printModels("polygon", models.polygon);
       }
     }
   }
@@ -450,7 +444,6 @@ function resetState() {
 
 function renderObject() {
   clear();
-
   // console.log(Object.keys(models));
   let keys = Object.keys(models);
   for (let key of keys) {
