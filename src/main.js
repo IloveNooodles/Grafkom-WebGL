@@ -1,6 +1,7 @@
 /* ==== Element and event listener ==== */
 let isPolygon = false;
 let isEditing = false;
+let editedPolygonObject = 0;
 let polyPoints = [];
 let editablePolygon;
 let editablePolygonPointIndex = [];
@@ -60,7 +61,6 @@ const stopDrawPolygonButton = document.getElementById("stop-gambar-polygon");
 stopDrawPolygonButton.addEventListener("click", function () {
   if (!isEditing) {
     if (polyPoints.length > 2) {
-      
       models.polygon.push(new Polygon(polyPoints));
       printModels("polygon", models.polygon);
       isPolygon = false;
@@ -94,6 +94,28 @@ addPointPolygonButton.addEventListener("click", function () {
 const deletePointPolygonButton = document.getElementById("hapus-titik-polygon");
 deletePointPolygonButton.addEventListener("click", function () {
   let deletePointCount = editablePolygonPointIndex.length;
+  let allElements = document.querySelectorAll("input[type=checkbox]");
+  let deletedElemnts = [];
+  let parentElmt;
+  for (let elmt of allElements) {
+    if (elmt.checked && elmt.id.startsWith("p")) {
+      deletedElemnts.push(elmt.parentElement);
+      if (elmt.nextElementSibling.textContent.startsWith("polygon")) {
+        return;
+      }
+    }
+    if (
+      elmt.id.startsWith("p") &&
+      elmt.nextElementSibling.textContent.startsWith("polygon")
+    ) {
+      parentElmt = elmt.parentElement;
+    }
+  }
+
+  for (let elmt of deletedElemnts) {
+    parentElmt.removeChild(elmt);
+  }
+
   for (let i = 0; i < deletePointCount; i++) {
     //console.log("jumlah loop");
     editablePolygon.positions.splice(editablePolygonPointIndex[i], 1);
