@@ -8,35 +8,6 @@ let tempShear = 0;
 let tempShearY = 0;
 let tempRotation = 0;
 
-// function rotation (type, positions, gl, program){
-//   const rotationSlider = document.getElementById("rotation");
-//   let newPositions = positions;
-//   let temp = 0;
-//   console.log(newPositions)
-//   rotationSlider.addEventListener("input", function () {
-//     let rotation = rotationSlider.value*Math.PI/180;
-//     var center = getCentroid(newPositions);
-//     //rotation on coordinate
-//     for (let i = 0; i < newPositions.length; i += 1) {
-//       newPositions[i][0] = (newPositions[i][0] - center[0]) * Math.cos(rotation - temp) - (newPositions[i][1] - center[1]) * Math.sin(rotation - temp) + center[0];
-//       newPositions[i][1] = (newPositions[i][0] - center[0]) * Math.sin(rotation - temp) + (newPositions[i][1] - center[1]) * Math.cos(rotation - temp) + center[1];
-//     temp = rotation;
-//     }
-//     clear();
-//     if (type == "line") {
-//       renderVertex(program, newPositions, 2);
-//       for (let i = 0; i < newPositions.length; i++) {
-//         gl.drawArrays(gl.LINES, i, 2);
-//       }
-//     } else if (type == "square" || type == "rectangle") {
-//       renderVertex(program, newPositions, 2);
-//       for (let i = 0; i < newPositions.length; i++) {
-//         gl.drawArrays(gl.TRIANGLE_FAN, i, 4);
-//       }
-//     }
-//   });
-// }
-
 function editObject() {
   hidePointPolyButtons();
   editablePolygonPointIndex = []
@@ -298,18 +269,10 @@ function editObject() {
       let center = centroid(model.positions);
       //rotation on coordinate
       for (let i = 0; i < model.positions.length; i += 1) {
-        model.positions[i][0] =
-          (model.positions[i][0] - center[0]) *
-            Math.cos(rotation - tempRotation) -
-          (model.positions[i][1] - center[1]) *
-            Math.sin(rotation - tempRotation) +
-          center[0];
-        model.positions[i][1] =
-          (model.positions[i][0] - center[0]) *
-            Math.sin(rotation - tempRotation) +
-          (model.positions[i][1] - center[1]) *
-            Math.cos(rotation - tempRotation) +
-          center[1];
+        const x = model.positions[i][0] - center[0];
+        const y = model.positions[i][1] - center[1];
+        model.positions[i][0] = x * Math.cos(rotation - tempRotation) - y * Math.sin(rotation - tempRotation) + center[0];
+        model.positions[i][1] = x * Math.sin(rotation - tempRotation) + y * Math.cos(rotation - tempRotation) + center[1];
       }
     }
     tempRotation = rotation;
