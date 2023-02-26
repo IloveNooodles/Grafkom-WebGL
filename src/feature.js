@@ -8,9 +8,16 @@ let tempShear = 0;
 let tempShearY = 0;
 let tempRotation = 0;
 
+function uncheckObject() {
+  let checkbox = document.querySelectorAll("input[type=checkbox]");
+  for (let i = 0; i < checkbox.length; i++) {
+    checkbox[i].checked = false;
+  }
+}
+
 function editObject() {
   hidePointPolyButtons();
-  editablePolygonPointIndex = []
+  editablePolygonPointIndex = [];
 
   let checkbox = document.querySelectorAll("input[type=checkbox]");
   checked = [];
@@ -37,7 +44,7 @@ function editObject() {
   for (let p = 0; p < modelList.length; p++) {
     let model = modelList[p];
     console.log(model);
-    for (let i = 0; i < model.colors.length; i ++) {
+    for (let i = 0; i < model.colors.length; i++) {
       model.colors[i][0] = 1;
       model.colors[i][1] = 1;
       model.colors[i][2] = 1;
@@ -45,11 +52,11 @@ function editObject() {
   }
 
   //change color of selected point to white
-  for (let p = 0; p < pointList.length; p ++) {
+  for (let p = 0; p < pointList.length; p++) {
     let model = pointList[p];
-    model.colors[pointIndex[p]-1][0] = 1;
-    model.colors[pointIndex[p]-1][1] = 1;
-    model.colors[pointIndex[p]-1][2] = 1;
+    model.colors[pointIndex[p] - 1][0] = 1;
+    model.colors[pointIndex[p] - 1][1] = 1;
+    model.colors[pointIndex[p] - 1][2] = 1;
   }
 
   //horizontal translation
@@ -94,7 +101,9 @@ function editObject() {
           model.positions[squarePointIndex - 2][0] += xTranslation - tempX;
         }
       } else if (model.constructor.name == "Rectangle") {
-        let widthHeightRatio = (model.positions[0][0] - model.positions[1][0]) / (model.positions[0][1] - model.positions[2][1]);
+        let widthHeightRatio =
+          (model.positions[0][0] - model.positions[1][0]) /
+          (model.positions[0][1] - model.positions[2][1]);
         console.log(model.positions[0][0] - model.positions[1][0]);
         console.log(model.positions[0][1] - model.positions[2][1]);
         console.log(widthHeightRatio);
@@ -185,7 +194,9 @@ function editObject() {
           model.positions[squarePointIndex - 2][0] += yTranslation - tempY;
         }
       } else if (model.constructor.name == "Rectangle") {
-        let widthHeightRatio = (model.positions[0][0] - model.positions[1][0]) / (model.positions[0][1] - model.positions[2][1]);
+        let widthHeightRatio =
+          (model.positions[0][0] - model.positions[1][0]) /
+          (model.positions[0][1] - model.positions[2][1]);
         if (widthHeightRatio < 0) {
           widthHeightRatio *= -1;
         }
@@ -249,8 +260,8 @@ function editObject() {
   tempRotation = 0;
 
   rotationSlider.addEventListener("input", function () {
-    console.log(rotationSlider.value)
-    let rotation = rotationSlider.value * Math.PI / 180;
+    console.log(rotationSlider.value);
+    let rotation = (rotationSlider.value * Math.PI) / 180;
     for (let p = 0; p < modelList.length; p++) {
       let model = modelList[p];
       let center = centroid(model.positions);
@@ -258,8 +269,14 @@ function editObject() {
       for (let i = 0; i < model.positions.length; i += 1) {
         const x = model.positions[i][0] - center[0];
         const y = model.positions[i][1] - center[1];
-        model.positions[i][0] = x * Math.cos(rotation - tempRotation) - y * Math.sin(rotation - tempRotation) + center[0];
-        model.positions[i][1] = x * Math.sin(rotation - tempRotation) + y * Math.cos(rotation - tempRotation) + center[1];
+        model.positions[i][0] =
+          x * Math.cos(rotation - tempRotation) -
+          y * Math.sin(rotation - tempRotation) +
+          center[0];
+        model.positions[i][1] =
+          x * Math.sin(rotation - tempRotation) +
+          y * Math.cos(rotation - tempRotation) +
+          center[1];
       }
     }
     tempRotation = rotation;
@@ -289,7 +306,7 @@ function editObject() {
   //shearY
   const shearSliderY = document.getElementById("shearY");
   tempShearY = 0;
-  
+
   shearSliderY.addEventListener("input", function () {
     let shearValue = transformCoordinate(
       canvas,
@@ -325,23 +342,23 @@ function editObject() {
       let model = pointList[p];
       console.log(pointIndex[p]);
       console.log(pointIndex);
-      model.colors[pointIndex[p]-1][0] = color.r;
-      model.colors[pointIndex[p]-1][1] = color.g;
-      model.colors[pointIndex[p]-1][2] = color.b;
+      model.colors[pointIndex[p] - 1][0] = color.r;
+      model.colors[pointIndex[p] - 1][1] = color.g;
+      model.colors[pointIndex[p] - 1][2] = color.b;
     }
   });
 
   //add and delete polygon points
-  for (let i = 0; i < modelList.length; i ++) {
+  for (let i = 0; i < modelList.length; i++) {
     if (modelList[i].constructor.name == "Polygon") {
       showPointPolyButtons();
       isPolygon = true;
       drawType = "polygon";
       editablePolygon = modelList[i];
-    } 
+    }
   }
 
-  for (let i = 0; i < pointList.length; i ++) {
+  for (let i = 0; i < pointList.length; i++) {
     if (pointList[i].constructor.name == "Polygon") {
       showPointPolyButtons();
       editablePolygon = pointList[i];
@@ -350,12 +367,9 @@ function editObject() {
     }
   }
 
-  for (let i = 0; i < editablePolygonPointIndex.length; i ++) {
-    editablePolygon.colors[editablePolygonPointIndex[i]] = [1, 1, 1 ,1];
+  for (let i = 0; i < editablePolygonPointIndex.length; i++) {
+    editablePolygon.colors[editablePolygonPointIndex[i]] = [1, 1, 1, 1];
   }
-
-  
-
 }
 
 function filterSelectedObject(array) {
@@ -377,28 +391,28 @@ function filterSelectedObject(array) {
       } else if (m == "r") {
         selectedModel.push(models.rectangle[array[i][1] - 1]);
         modelInserted.push(array[i]);
-      }else if(m == "p"){
+      } else if (m == "p") {
         selectedModel.push(models.polygon[array[i][1] - 1]);
         modelInserted.push(array[i]);
       }
     } else {
-      let point = array[i].split("point")
-      console.log(point)
-      if (!modelInserted.includes(point[0])){
-        if (m == "l"){
-          selectedPoint.push(models.line[array[i][1]-1])
+      let point = array[i].split("point");
+      console.log(point);
+      if (!modelInserted.includes(point[0])) {
+        if (m == "l") {
+          selectedPoint.push(models.line[array[i][1] - 1]);
           modelInserted.push(array[i]);
           pointIndex.push(point[1]);
-        }else if(m == "s"){
-          selectedPoint.push(models.square[array[i][1]-1])
+        } else if (m == "s") {
+          selectedPoint.push(models.square[array[i][1] - 1]);
           modelInserted.push(array[i]);
           pointIndex.push(point[1]);
-        }else if(m == "r"){
-          selectedPoint.push(models.rectangle[array[i][1]-1])
+        } else if (m == "r") {
+          selectedPoint.push(models.rectangle[array[i][1] - 1]);
           modelInserted.push(array[i]);
           pointIndex.push(point[1]);
-        }else if(m == "p"){
-          selectedPoint.push(models.polygon[array[i][1]-1])
+        } else if (m == "p") {
+          selectedPoint.push(models.polygon[array[i][1] - 1]);
           modelInserted.push(array[i]);
           pointIndex.push(point[1]);
         }
@@ -420,7 +434,7 @@ function printModels(model, obj) {
   <label for="${model[0]}${objCount}">${model}${objCount}</label><br>
    `;
   list.appendChild(object);
-  
+
   for (let i = 1; i <= pointCount; i++) {
     let point = document.createElement("li");
     point.innerHTML = `
@@ -436,14 +450,17 @@ function printModels(model, obj) {
   let objectCount = obj.length;
   shapeSelection.addEventListener("change", function () {
     if (shapeSelection.checked) {
-      document.querySelectorAll(`input[name="${model[0]}${objectCount}point"]`).forEach((item) => {
-        item.checked = true;
-      });
+      document
+        .querySelectorAll(`input[name="${model[0]}${objectCount}point"]`)
+        .forEach((item) => {
+          item.checked = true;
+        });
     } else {
-      document.querySelectorAll(`input[name="${model[0]}${objectCount}point"]`).forEach((item) => {
-        item.checked = false;
-      });
+      document
+        .querySelectorAll(`input[name="${model[0]}${objectCount}point"]`)
+        .forEach((item) => {
+          item.checked = false;
+        });
     }
   });
 }
-

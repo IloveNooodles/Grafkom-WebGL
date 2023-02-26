@@ -39,10 +39,10 @@ const stopDrawPolygonButton = document.getElementById("stop-gambar-polygon");
 stopDrawPolygonButton.addEventListener("click", function () {
   if (polyPoints.length > 2) {
     models.polygon.push(new Polygon(polyPoints));
-  printModels("polygon", models.polygon);
-  isPolygon = false;
-  drawType = "";
-  polyPoints = [];
+    printModels("polygon", models.polygon);
+    isPolygon = false;
+    drawType = "";
+    polyPoints = [];
   }
 });
 
@@ -88,6 +88,7 @@ deletePointPolygonButton.addEventListener("click", function () {
 
 const editButton = document.getElementById("edit");
 editButton.addEventListener("click", function () {
+  alert("You can start editing now!");
   document.getElementById("x-translation").value = "0";
   document.getElementById("y-translation").value = "0";
   document.getElementById("dilation").value = "1";
@@ -95,6 +96,14 @@ editButton.addEventListener("click", function () {
   document.getElementById("rotation").value = "0";
   drawType = "edit";
   editObject();
+});
+
+const finishButton = document.getElementById("finish");
+finishButton.addEventListener("click", function (e) {
+  uncheckObject();
+  finishButton.style.display = "none";
+  drawType = "";
+  alert("Selected object edited!!");
 });
 
 const clearButton = document.getElementById("clear");
@@ -110,11 +119,13 @@ saveButton.addEventListener("click", function () {
   link.href = file;
   document.body.appendChild(link);
   link.click();
+  alert("File saved");
 });
 
 const loadInput = document.getElementById("load");
 loadInput.addEventListener("input", function (e) {
   load(e.target.files[0]);
+  alert("File loaded!");
 });
 
 const scaleSlider = document.getElementById("size");
@@ -394,6 +405,11 @@ function resetState() {
 
 function renderObject() {
   clear();
+  if (drawType == "edit") {
+    finishButton.style.display = "inline";
+  } else {
+    finishButton.style.display = "none";
+  }
 
   // console.log(Object.keys(models));
   let keys = Object.keys(models);
