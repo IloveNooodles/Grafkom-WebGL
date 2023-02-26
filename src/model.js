@@ -147,9 +147,7 @@ class Polygon extends Shape {
   constructor(polyPoints) {
     super();
     this.polyPoints = polyPoints;
-    // console.log(polyPoints);
     let vertexCount = polyPoints.length / 2;
-    // console.log(vertexCount);
     let { r, g, b } = getRGB(rgb);
     for (let i = 0; i < polyPoints.length; i += 2) {
       this.positions.push(

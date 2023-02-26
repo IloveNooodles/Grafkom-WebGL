@@ -61,8 +61,7 @@ function editObject() {
 
   //horizontal translation
   xSlider.addEventListener("input", function () {
-    let x = transformCoordinate(canvas, parseInt(xSlider.value), 0);
-    let xTranslation = x[0] + 1;
+    let xTranslation = xSlider.value;
     for (let p = 0; p < modelList.length; p++) {
       let model = modelList[p];
       for (let i = 0; i < model.positions.length; i++) {
@@ -154,8 +153,7 @@ function editObject() {
   tempY = 0;
 
   ySlider.addEventListener("input", function () {
-    let y = transformCoordinate(canvas, 0, parseInt(ySlider.value));
-    let yTranslation = y[1] - 1;
+    let yTranslation = ySlider.value;
     for (let p = 0; p < modelList.length; p++) {
       let model = modelList[p];
       for (let i = 0; i < model.positions.length; i++) {
@@ -247,9 +245,12 @@ function editObject() {
     let scale = scaleSlider.value;
     for (let p = 0; p < modelList.length; p++) {
       let model = modelList[p];
-      for (let i = 0; i < model.positions.length; i += 1) {
-        model.positions[i][0] *= scale / tempScale;
-        model.positions[i][1] *= scale / tempScale;
+      let center = centroid(model.positions);
+      for (let i = 0; i < model.positions.length; i++) {
+        model.positions[i][0] =
+          center[0] + (model.positions[i][0] - center[0]) * scale/ tempScale;
+        model.positions[i][1] =
+          center[1] + (model.positions[i][1] - center[1]) * scale/ tempScale;
       }
     }
     tempScale = scale;
@@ -287,17 +288,13 @@ function editObject() {
   tempShear = 0;
 
   shearSlider.addEventListener("input", function () {
-    let shearValue = transformCoordinate(
-      canvas,
-      parseInt(shearSlider.value),
-      0
-    );
-    let shear = shearValue[0] + 1;
+    let shear = shearSlider.value;
     for (let p = 0; p < modelList.length; p++) {
       let model = modelList[p];
-      for (let i = 0; i < model.positions.length; i += 1) {
+      let center = centroid(model.positions);
+      for (let i = 0; i < model.positions.length/2; i += 1) {
         model.positions[i][0] +=
-          (model.positions[i][1] - 0) * (shear - tempShear);
+          (model.positions[i][1] - center[1]) * (shear - tempShear);
       }
     }
     tempShear = shear;
@@ -308,17 +305,13 @@ function editObject() {
   tempShearY = 0;
 
   shearSliderY.addEventListener("input", function () {
-    let shearValue = transformCoordinate(
-      canvas,
-      0,
-      parseInt(shearSliderY.value)
-    );
-    let shear = shearValue[1] - 1;
+    let shear = shearSliderY.value;
     for (let p = 0; p < modelList.length; p++) {
       let model = modelList[p];
-      for (let i = 0; i < model.positions.length; i += 1) {
+      let center = centroid(model.positions);
+      for (let i = 1; i < model.positions.length; i += 2) {
         model.positions[i][1] +=
-          (model.positions[i][0] - 0) * (shear - tempShearY);
+          (model.positions[i][0] - center[0]) * (shear - tempShearY);
       }
     }
     tempShearY = shear;
