@@ -1,94 +1,135 @@
 /* ==== Element and event listener ==== */
 let isPolygon = false;
+let isEditing = false;
 let polyPoints = [];
 let editablePolygon;
 let editablePolygonPointIndex = [];
 const lineButton = document.getElementById("line");
 lineButton.addEventListener("click", function () {
-  hideDrawPolyButtons();
-  isPolygon = false;
-  drawType = "line";
+  if (!isEditing) {
+    hideDrawPolyButtons();
+    isPolygon = false;
+    drawType = "line";
+  } else {
+    alert("Click finish button first!");
+  }
 });
 
 const squareButton = document.getElementById("square");
 squareButton.addEventListener("click", function () {
-  hideDrawPolyButtons();
-  isPolygon = false;
-  drawType = "square";
+  if (!isEditing) {
+    hideDrawPolyButtons();
+    isPolygon = false;
+    drawType = "square";
+  } else {
+    alert("Click finish button first!");
+  }
 });
 
 const rectangleButton = document.getElementById("rectangle");
 rectangleButton.addEventListener("click", function () {
-  hideDrawPolyButtons();
-  isPolygon = false;
-  drawType = "rectangle";
+  if (!isEditing) {
+    hideDrawPolyButtons();
+    isPolygon = false;
+    drawType = "rectangle";
+  } else {
+    alert("Click finish button first!");
+  }
 });
 
 const polygonButton = document.getElementById("polygon");
 polygonButton.addEventListener("click", function () {
-  isPolygon = true;
-  showDrawPolyButtons();
+  if (!isEditing) {
+    isPolygon = true;
+    showDrawPolyButtons();
+  } else {
+    alert("Click finish button first!");
+  }
 });
 
 const startDrawPolygonButton = document.getElementById("mulai-gambar-polygon");
 startDrawPolygonButton.addEventListener("click", function () {
-  drawType = "polygon";
+  if (!isEditing) {
+    drawType = "polygon";
+  } else {
+    alert("Click finish button first!");
+  }
 });
 
 const stopDrawPolygonButton = document.getElementById("stop-gambar-polygon");
 stopDrawPolygonButton.addEventListener("click", function () {
-  if (polyPoints.length > 2) {
-    models.polygon.push(new Polygon(polyPoints));
-    printModels("polygon", models.polygon);
-    isPolygon = false;
-    drawType = "";
-    polyPoints = [];
+  if (!isEditing) {
+    if (polyPoints.length > 2) {
+      models.polygon.push(new Polygon(polyPoints));
+      printModels("polygon", models.polygon);
+      isPolygon = false;
+      drawType = "";
+      polyPoints = [];
+    }
+  } else {
+    alert("Click finish button first!");
   }
 });
 
 const addPointPolygonButton = document.getElementById("tambah-titik-polygon");
 addPointPolygonButton.addEventListener("click", function () {
   //let { r, g, b } = getRGB(rgb);
-  for (let i = 0; i < polyPoints.length; i += 2) {
-    editablePolygon.positions.push(
-      transformCoordinate(canvas, polyPoints[i], polyPoints[i + 1])
+  if (!isEditing) {
+    for (let i = 0; i < polyPoints.length; i += 2) {
+      editablePolygon.positions.push(
+        transformCoordinate(canvas, polyPoints[i], polyPoints[i + 1])
+      );
+      editablePolygon.colors.push([1, 1, 1, 1]);
+      //console.log(editablePolygon.colors);
+    }
+    let vertexCount = editablePolygon.positions.length;
+    editablePolygon.positions = convexHull(
+      editablePolygon.positions,
+      vertexCount
     );
-    editablePolygon.colors.push([1, 1, 1, 1]);
-    //console.log(editablePolygon.colors);
-  }
-  let vertexCount = editablePolygon.positions.length;
-  editablePolygon.positions = convexHull(
-    editablePolygon.positions,
-    vertexCount
-  );
 
-  polyPoints = [];
-  printModels("polygon", models.polygon);
+    polyPoints = [];
+    printModels("polygon", models.polygon);
+  } else {
+    alert("Click finish button first!");
+  }
 });
 
 const deletePointPolygonButton = document.getElementById("hapus-titik-polygon");
 deletePointPolygonButton.addEventListener("click", function () {
-  let deletePointCount = editablePolygonPointIndex.length;
-  for (let i = 0; i < deletePointCount; i++) {
-    //console.log("jumlah loop");
-    editablePolygon.positions.splice(editablePolygonPointIndex[i], 1);
-    editablePolygon.colors.splice(editablePolygonPointIndex[i], 1);
-    for (let j = i + 1; j < editablePolygonPointIndex.length; j++) {
-      editablePolygonPointIndex[j] -= 1;
+  if (!isEditing) {
+    let deletePointCount = editablePolygonPointIndex.length;
+    for (let i = 0; i < deletePointCount; i++) {
+      //console.log("jumlah loop");
+      editablePolygon.positions.splice(editablePolygonPointIndex[i], 1);
+      editablePolygon.colors.splice(editablePolygonPointIndex[i], 1);
+      for (let j = i + 1; j < editablePolygonPointIndex.length; j++) {
+        editablePolygonPointIndex[j] -= 1;
+      }
     }
-  }
 
-  let vertexCount = editablePolygon.positions.length;
-  editablePolygon.positions = convexHull(
-    editablePolygon.positions,
-    vertexCount
-  );
-  printModels("polygon", models.polygon);
+    let vertexCount = editablePolygon.positions.length;
+    editablePolygon.positions = convexHull(
+      editablePolygon.positions,
+      vertexCount
+    );
+    printModels("polygon", models.polygon);
+  } else {
+    alert("Click finish button first!");
+  }
 });
 
 const editButton = document.getElementById("edit");
 editButton.addEventListener("click", function () {
-  alert("You can start editing now!");
+  isEditing = !isEditing;
+  if (isEditing) {
+    alert("You can start editing now!");
+    editButton.textContent = "finish";
+  } else {
+    alert("Selected object are edited");
+    editButton.textContent = "edit";
+    uncheckObject();
+  }
   document.getElementById("x-translation").value = "0";
   document.getElementById("y-translation").value = "0";
   document.getElementById("dilation").value = "1";
@@ -98,34 +139,38 @@ editButton.addEventListener("click", function () {
   editObject();
 });
 
-const finishButton = document.getElementById("finish");
-finishButton.addEventListener("click", function (e) {
-  uncheckObject();
-  finishButton.style.display = "none";
-  drawType = "";
-  alert("Selected object edited!!");
-});
-
 const clearButton = document.getElementById("clear");
 clearButton.addEventListener("click", function (e) {
-  location.reload();
+  if (!isEditing) {
+    location.reload();
+  } else {
+    alert("Click finish button first!");
+  }
 });
 
 const saveButton = document.getElementById("save");
 saveButton.addEventListener("click", function () {
-  let file = save();
-  let link = document.createElement("a");
-  link.setAttribute("download", "save.json");
-  link.href = file;
-  document.body.appendChild(link);
-  link.click();
-  alert("File saved");
+  if (!isEditing) {
+    let file = save();
+    let link = document.createElement("a");
+    link.setAttribute("download", "save.json");
+    link.href = file;
+    document.body.appendChild(link);
+    link.click();
+    alert("File saved");
+  } else {
+    alert("Click finish button first!");
+  }
 });
 
 const loadInput = document.getElementById("load");
 loadInput.addEventListener("input", function (e) {
-  load(e.target.files[0]);
-  alert("File loaded!");
+  if (!isEditing) {
+    load(e.target.files[0]);
+    alert("File loaded!");
+  } else {
+    alert("Click finish button first!");
+  }
 });
 
 const scaleSlider = document.getElementById("size");
@@ -405,11 +450,6 @@ function resetState() {
 
 function renderObject() {
   clear();
-  if (drawType == "edit") {
-    finishButton.style.display = "inline";
-  } else {
-    finishButton.style.display = "none";
-  }
 
   // console.log(Object.keys(models));
   let keys = Object.keys(models);
