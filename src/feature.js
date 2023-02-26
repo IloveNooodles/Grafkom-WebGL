@@ -11,19 +11,6 @@ let tempRotation = 0;
 function editObject() {
   hidePointPolyButtons();
   editablePolygonPointIndex = []
-  //change back color of all point to black
-  let keys = Object.keys(models);
-  for (let key of keys) {
-    if (models[key].length !== 0) {
-      for (let model of models[key]) {
-        for(let i = 0; i < model.colors.length; i ++) {
-          model.colors[i][0] = 0;
-          model.colors[i][1] = 0;
-          model.colors[i][2] = 0;
-        }
-      }
-    }
-  }
 
   let checkbox = document.querySelectorAll("input[type=checkbox]");
   checked = [];
@@ -433,6 +420,7 @@ function printModels(model, obj) {
   <label for="${model[0]}${objCount}">${model}${objCount}</label><br>
    `;
   list.appendChild(object);
+  
   for (let i = 1; i <= pointCount; i++) {
     let point = document.createElement("li");
     point.innerHTML = `
