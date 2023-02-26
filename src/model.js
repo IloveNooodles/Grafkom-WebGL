@@ -147,7 +147,6 @@ class Polygon extends Shape {
   constructor(polyPoints) {
     super();
     this.polyPoints = polyPoints;
-    let vertexCount = polyPoints.length / 2;
     let { r, g, b } = getRGB(rgb);
     for (let i = 0; i < polyPoints.length; i += 2) {
       this.positions.push(
@@ -155,6 +154,12 @@ class Polygon extends Shape {
       );
       this.colors.push([r, g, b, 1]);
     }
+    let vertexCount = this.positions.length;
+    this.positions = convexHull(this.positions, vertexCount);
+
+    let newVertexCount = this.positions.length;
+    let deletedVertexCount = newVertexCount - vertexCount;
+    this.colors.splice(newVertexCount, deletedVertexCount);
   }
 
   copy(obj) {
@@ -165,8 +170,6 @@ class Polygon extends Shape {
   render(program) {
     this.setCentroid();
     let vertexCount = this.positions.length;
-    this.positions = convexHull(this.positions, vertexCount);
-    
 
     renderColor(program, flatten(this.colors), 4);
     renderVertex(program, flatten(this.positions), 2);

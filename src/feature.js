@@ -248,9 +248,9 @@ function editObject() {
       let center = centroid(model.positions);
       for (let i = 0; i < model.positions.length; i++) {
         model.positions[i][0] =
-          center[0] + (model.positions[i][0] - center[0]) * scale/ tempScale;
+          center[0] + ((model.positions[i][0] - center[0]) * scale) / tempScale;
         model.positions[i][1] =
-          center[1] + (model.positions[i][1] - center[1]) * scale/ tempScale;
+          center[1] + ((model.positions[i][1] - center[1]) * scale) / tempScale;
       }
     }
     tempScale = scale;
@@ -292,7 +292,7 @@ function editObject() {
     for (let p = 0; p < modelList.length; p++) {
       let model = modelList[p];
       let center = centroid(model.positions);
-      for (let i = 0; i < model.positions.length/2; i += 1) {
+      for (let i = 0; i < model.positions.length / 2; i += 1) {
         model.positions[i][0] +=
           (model.positions[i][1] - center[1]) * (shear - tempShear);
       }

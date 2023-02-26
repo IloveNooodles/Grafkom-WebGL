@@ -60,6 +60,7 @@ const stopDrawPolygonButton = document.getElementById("stop-gambar-polygon");
 stopDrawPolygonButton.addEventListener("click", function () {
   if (!isEditing) {
     if (polyPoints.length > 2) {
+      
       models.polygon.push(new Polygon(polyPoints));
       printModels("polygon", models.polygon);
       isPolygon = false;
@@ -74,39 +75,39 @@ stopDrawPolygonButton.addEventListener("click", function () {
 const addPointPolygonButton = document.getElementById("tambah-titik-polygon");
 addPointPolygonButton.addEventListener("click", function () {
   //let { r, g, b } = getRGB(rgb);
-    for (let i = 0; i < polyPoints.length; i += 2) {
-      editablePolygon.positions.push(
-        transformCoordinate(canvas, polyPoints[i], polyPoints[i + 1])
-      );
-      editablePolygon.colors.push([1, 1, 1, 1]);
-      //console.log(editablePolygon.colors);
-    }
-    let vertexCount = editablePolygon.positions.length;
-    editablePolygon.positions = convexHull(
-      editablePolygon.positions,
-      vertexCount
+  for (let i = 0; i < polyPoints.length; i += 2) {
+    editablePolygon.positions.push(
+      transformCoordinate(canvas, polyPoints[i], polyPoints[i + 1])
     );
+    editablePolygon.colors.push([1, 1, 1, 1]);
+    //console.log(editablePolygon.colors);
+  }
+  let vertexCount = editablePolygon.positions.length;
+  editablePolygon.positions = convexHull(
+    editablePolygon.positions,
+    vertexCount
+  );
 
-    polyPoints = [];
+  polyPoints = [];
 });
 
 const deletePointPolygonButton = document.getElementById("hapus-titik-polygon");
 deletePointPolygonButton.addEventListener("click", function () {
-    let deletePointCount = editablePolygonPointIndex.length;
-    for (let i = 0; i < deletePointCount; i++) {
-      //console.log("jumlah loop");
-      editablePolygon.positions.splice(editablePolygonPointIndex[i], 1);
-      editablePolygon.colors.splice(editablePolygonPointIndex[i], 1);
-      for (let j = i + 1; j < editablePolygonPointIndex.length; j++) {
-        editablePolygonPointIndex[j] -= 1;
-      }
+  let deletePointCount = editablePolygonPointIndex.length;
+  for (let i = 0; i < deletePointCount; i++) {
+    //console.log("jumlah loop");
+    editablePolygon.positions.splice(editablePolygonPointIndex[i], 1);
+    editablePolygon.colors.splice(editablePolygonPointIndex[i], 1);
+    for (let j = i + 1; j < editablePolygonPointIndex.length; j++) {
+      editablePolygonPointIndex[j] -= 1;
     }
+  }
 
-    let vertexCount = editablePolygon.positions.length;
-    editablePolygon.positions = convexHull(
-      editablePolygon.positions,
-      vertexCount
-    );
+  let vertexCount = editablePolygon.positions.length;
+  editablePolygon.positions = convexHull(
+    editablePolygon.positions,
+    vertexCount
+  );
 });
 
 const editButton = document.getElementById("edit");
